@@ -1,0 +1,34 @@
+Package: hyper.gam
+Type: Package
+Title: Generalized Additive Models with Hyper Column
+Version: 0.1.0
+Date: 2025-04-10
+Description: Generalized additive models with a numeric hyper column tabulated
+        on a common grid. Sign-adjustment based on the correlation of model
+        prediction and a selected slice of the hyper column. Visualization of
+        the integrand surface over the hyper column.
+RoxygenNote: 7.3.2
+Encoding: UTF-8
+License: GPL-2
+Depends: R (>= 4.4), groupedHyperframe
+Language: en-US
+Authors@R: c(person(given = 'Tingting', family = 'Zhan', role = c('aut',
+        'cre'), email = c('tingtingzhan@gmail.com'), comment = c(ORCID =
+        '0000-0001-9971-4844')), person(given = 'Inna', family =
+        'Chervoneva', role = c('aut'), email =
+        'Inna.Chervoneva@jefferson.edu', comment = c(ORCID =
+        '0000-0002-9104-4505')), person(given = 'Erjia', family = 'Cui', role
+        = c('ctb'), email = 'ecui@umn.edu', comment = c(ORCID =
+        '0000-0003-3576-2892')))
+Imports: caret, cli, mgcv, nlme, parallel, plotly
+Suggests: knitr, quarto, rmarkdown, spatstat.geom, survival,
+        matrixStats, htmlwidgets
+VignetteBuilder: quarto
+NeedsCompilation: no
+Packaged: 2025-04-10 14:46:46 UTC; tingtingzhan
+Author: Tingting Zhan [aut, cre] (<https://orcid.org/0000-0001-9971-4844>),
+  Inna Chervoneva [aut] (<https://orcid.org/0000-0002-9104-4505>),
+  Erjia Cui [ctb] (<https://orcid.org/0000-0003-3576-2892>)
+Maintainer: Tingting Zhan <tingtingzhan@gmail.com>
+Repository: CRAN
+Date/Publication: 2025-04-15 19:20:02 UTC
