@@ -129,7 +129,7 @@ get_mesh.hyper_gam <- function(x, newdata, n = 501L, ...) {
 
 #' @importFrom mgcv predict.gam
 z_hyper_gam <- function(
-    x, # returned object from [hyper_gam]
+    x, # returned object from function [hyper_gam()]
     sign_adjusted = TRUE,
     sgn = if (sign_adjusted) x |> cor_xy(probs = .5) |> sign() else 1,
     ...

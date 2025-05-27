@@ -1,6 +1,23 @@
 ---
-title: "Generalized Additive Models with Hyper Column"
-author: Tingting Zhan
+title: "Supervised Learning Tools for Deriving Biomarkers based on Single-Cell Data"
+author: 
+  - name: Tingting Zhan
+    orcid: 0000-0001-9971-4844
+    email: tingtingzhan@gmail.com
+    affiliations: 
+      - ref: tjuh
+  - name: Inna Chervoneva
+    orcid: 0000-0002-9104-4505
+    email: Inna.Chervoneva@jefferson.edu
+    affiliations: 
+      - ref: tjuh
+affiliations:
+  - id: tjuh
+    name: Thomas Jefferson University & Hospitals
+    address: 130 South 9th Street
+    city: Philadelphia
+    state: PA
+    postal-code: 19107
 format: 
   html:
     page-layout: full
@@ -11,15 +28,19 @@ toc-depth: 4
 toc-title: ''
 editor: visual
 bibliography: hypergam.bib
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>" 
 vignette: >
-  %\VignetteIndexEntry{intro}
+  %\VignetteIndexEntry{applications}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
 
 # Introduction
 
-This vignette of documents applications based on package **`hyper.gam`** ([Github](https://github.com/tingtingzhan/hyper.gam), [RPubs](https://rpubs.com/tingtingzhan/hyper_gam)).
+This vignette provides examples of using the package **`hyper.gam`** ([Github](https://github.com/tingtingzhan/hyper.gam), [RPubs](https://rpubs.com/tingtingzhan/hyper_gam_application)) for deriving single index predictors of scalar outcomes based on spatial and non-spatial single-cell imaging data.
 
 ## Prerequisite
 
@@ -28,7 +49,8 @@ New features are first implemented on [Github](https://github.com/tingtingzhan/h
 ```{r}
 #| warning: false
 #| eval: false
-devtools::install_github('tingtingzhan/hyper.gam')
+remotes::install_github('tingtingzhan/groupedHyperframe')
+remotes::install_github('tingtingzhan/hyper.gam')
 ```
 
 And eventually make their way to [`CRAN`](https://CRAN.R-project.org/package=hyper.gam).
@@ -36,6 +58,7 @@ And eventually make their way to [`CRAN`](https://CRAN.R-project.org/package=hyp
 ```{r}
 #| warning: false
 #| eval: false
+utils::install.packages('groupedHyperframe')
 utils::install.packages('hyper.gam')
 ```
 
@@ -45,207 +68,326 @@ Examples in this vignette require that the `search` path has
 
 ```{r}
 #| message: false
+library(groupedHyperframe)
 library(hyper.gam)
 library(survival)
 ```
 
 ```{r}
 #| echo: false
-library(knitr) # for tables in this vignette
 op = par(no.readonly = TRUE)
 #options(mc.cores = 1L) # for CRAN submission
 ```
 
 ## Terms and Abbreviations
 
-```{r echo = FALSE, results = 'asis'}
-c(
-  '', 'Forward pipe operator', '`?base::pipeOp` introduced in `R` 4.1.0', 
-  '`attr`', 'Attributes', '`base::attr`; `base::attributes`',
-  '`contour`', 'Contours', '`graphics::contour`; `hyper.gam::contour.hyper_gam`',
-  '`coxph`', 'Cox model', '`survival::coxph`',
-  '`gam`', 'Generalized additive models', '`mgcv::gam`',
-  '`groupedHyperframe`, `hypercolumn`', '(Hyper column of) (grouped) hyper data frame', ' `groupedHyperframe::as.groupedHyperframe`; `spatstat.geom::hyperframe`', 
-  '`htmlwidget`', 'HTML Widgets', '`` ?htmlwidgets::`htmlwidgets-package` ``; `plotly::plotly`',
-  '`persp`', 'Perspective plot', '`graphics::persp`; `hyper.gam::persp.hyper_gam`',
-  '`PFS`', 'Progression/recurrence free survival', '<https://en.wikipedia.org/wiki/Progression-free_survival>',
-  '`quantile`', 'Quantile', '`stats::quantile`',
-  '`S3`, `generic`, `methods`', '`S3` object oriented system',  '`base::UseMethod`; `utils::methods`; `utils::getS3method`; <https://adv-r.hadley.nz/s3.html>',
-  '`Surv`', 'Survival object', '`survival::Surv`'
-) |>
-  matrix(nrow = 3L, dimnames = list(c('Term / Abbreviation', 'Description', 'Reference'), NULL)) |>
-  t.default() |>
-  as.data.frame.matrix() |> 
-  kable()
-```
+| Term / Abbreviation | Description |
+|------------------------------------|------------------------------------|
+| [`|>`](https://search.r-project.org/R/refmans/base/html/pipeOp.html) | Forward pipe operator introduced since `R` 4.1.0, used together with the `_` placeholder |
+| [`attr`](https://search.r-project.org/R/refmans/base/html/attr.html), [`attributes`](https://search.r-project.org/R/refmans/base/html/attributes.html) | Attributes |
+| [`contour`](https://search.r-project.org/R/refmans/graphics/html/contour.html) | Contour line, <https://en.wikipedia.org/wiki/Contour_line> |
+| [`createDataPartition`](https://search.r-project.org/CRAN/refmans/caret/html/createDataPartition.html) | Test vs. training data set partition, from package **`caret`** [@caret] |
+| `csv`, [`read.csv`](https://search.r-project.org/R/refmans/utils/html/read.table.html) | (Read) comma-separated-value files |
+| [`coxph`](https://search.r-project.org/CRAN/refmans/survival/html/coxph.html) | Cox proportional hazards model, from package **`survival`** [@survival] |
+| [`gam`](https://search.r-project.org/CRAN/refmans/mgcv/html/gam.html) | Generalized additive models (GAM), from package **`mgcv`** [@mgcv] |
+| [`groupedHyperframe`](https://CRAN.R-project.org/package=groupedHyperframe/vignettes/intro.html) | Grouped hyper data frame, from package **`groupedHyperframe`** [@groupedHyperframe] |
+| `hypercolumns`, [`hyperframe`](https://search.r-project.org/CRAN/refmans/spatstat.geom/html/hyperframe.html) | (Hyper columns of) hyper data frame, from package **`spatstat.geom`** [@Baddeley05] |
+| [`htmlwidget`](https://search.r-project.org/CRAN/refmans/htmlwidgets/html/htmlwidgets-package.html) | HTML Widgets, from package **`htmlwidgets`** [@htmlwidgets], <https://www.htmlwidgets.org>, <https://plotly.com/r/getting-started/> |
+| [`inherits`](https://search.r-project.org/R/refmans/base/html/class.html) | Class inheritance |
+| [`L`](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Constants)-suffix | Create [integer](https://search.r-project.org/R/refmans/base/html/integer.html) constant |
+| [`mgcv::s`](https://search.r-project.org/CRAN/refmans/mgcv/html/s.html) | (Set up of) spline based smooths [@mgcv_s] |
+| [`mgcv::ti`](https://search.r-project.org/CRAN/refmans/mgcv/html/te.html) | Tensor product interaction [@mgcv_ti] |
+| [`persp`](https://search.r-project.org/R/refmans/graphics/html/persp.html) | Perspective plot, <https://en.wikipedia.org/wiki/Perspective_(graphical)> |
+| `PFS` | Progression/recurrence free survival, <https://en.wikipedia.org/wiki/Progression-free_survival> |
+| [`predict`](https://search.r-project.org/R/refmans/stats/html/predict.html) | Model predictions |
+| [`predict.gam`](https://search.r-project.org/CRAN/refmans/mgcv/html/predict.gam.html) | GAM model predictor |
+| [`quantile`](https://search.r-project.org/R/refmans/stats/html/quantile.html) | Quantile |
+| `S3`, `generic`, [`methods`](https://search.r-project.org/R/refmans/utils/html/methods.html) | `S3` object oriented system, [`UseMethod`](https://search.r-project.org/R/refmans/base/html/UseMethod.html); [`getS3method`](https://search.r-project.org/R/refmans/utils/html/getS3method.html); <https://adv-r.hadley.nz/s3.html> |
+| [`search`](https://search.r-project.org/R/refmans/base/html/search.html) | Search path for `R` objects |
+| [`Surv`](https://search.r-project.org/CRAN/refmans/survival/html/Surv.html) | Survival, i.e., time-to-event, object, from package **`survival`** [@survival] |
+
+
 
 ## Acknowledgement
 
 The authors thank [Erjia Cui](https://orcid.org/0000-0003-3576-2892) for his contribution to function `hyper_gam()`.
 
-This work is supported by NCI R01CA222847 ([I. Chervoneva](https://orcid.org/0000-0002-9104-4505), [T. Zhan](https://orcid.org/0000-0001-9971-4844), and [H. Rui](https://orcid.org/0000-0002-8778-261X)) and R01CA253977 (H. Rui and I. Chervoneva).
+This work is supported by National Institutes of Health, U.S. Department of Health and Human Services grants
 
-# Quantile Index Predictor
+-   R01CA222847 ([I. Chervoneva](https://orcid.org/0000-0002-9104-4505), [T. Zhan](https://orcid.org/0000-0001-9971-4844), and [H. Rui](https://orcid.org/0000-0002-8778-261X))
 
-Publications include [@Yi23a; @Yi23b].
+-   R01CA253977 (H. Rui and I. Chervoneva).
 
-## Data Preparation
 
-Data set `groupedHyperframe::Ki67` is a `groupedHyperframe` with a `numeric`-`hypercolumn` *`logKi67`* and a nested grouping structure *`~patientID/tissueID`*
+<!---
+[Highlighted test.]{style="background-color: #FFFF00"}
+-->
+
+<!---
+[~~Highlighted strike through test.~~]{style="background-color: #FFFF00"}
+-->
+
+
+# Data Structure
+
+Single-cell multiplex immuno-fluorescence immunohistochemistry (mIF-IHC) imaging data are the result of digital processing of the microscopic images of tissue stained with selected antibodies. Quantitative pathology platforms, e.g., [Akoya](https://www.akoyabio.com) or [QuPath](https://qupath.github.io), support cell segmentation of mIF-IHC images and quantification of the mean protein expression in each cell. The cell centroid coordinates and cell signal intensities (CSIs) for each stained protein are usually extracted as individual comma-separated values `.csv` files. For each cell in a tissue image, the data include the cell centroid coordinates and cell signal intensity (CSI) for each quantified protein expression. The data may have multiple levels of hierarchical clustering. For example, single cells are clustered within a Region of Interest (ROI) or a tissue core, ROIs are clustered within a tissue or tissue cores are clustered within a patient.
+
+# Quantile Index
+
+Applications based on the Quantile Index (QI) methodology is described in our peer-reviewed publications @Yi23a; @Yi23b; @Yi25.
+
+## Example
+
+Data example **`Ki67`** included in package **`groupedHyperframe`** ([Github](https://github.com/tingtingzhan/groupedHyperframe), [`CRAN`](https://CRAN.R-project.org/package=groupedHyperframe)) is a *grouped hyper data frame*, an extension of the hyper data frame `hyperframe` object defined in `R` package **`spatstat.geom`** [@Baddeley15; @Baddeley05]. The numeric-hypercolumn *`logKi67`*, whose elements are numeric vectors of different lengths, contains the log-transformed Ki67 protein expression CSIs in each *`tissueID`* nested in *`patientID`*. Such nested grouping structure is denoted by *`~patientID/tissueID`* following the nomenclature of `R` package **`nlme`** [@Pinheiro00; @nlme]. The data example **`Ki67`** also contains the metadata including the outcome of interest, e.g., progression free survival *`PFS`*, *`Her2`*, *`HR`*, etc. Detailed information about the `groupedHyperframe` class may be found in package **`groupedHyperframe`** vignettes ([RPubs](https://rpubs.com/tingtingzhan/groupedHyperframe), [`CRAN`](https://CRAN.R-project.org/package=groupedHyperframe/vignettes/intro.html)), section *Grouped Hyper Data Frame*.
 
 ```{r}
 data(Ki67, package = 'groupedHyperframe')
 Ki67
 ```
 
-Analysis in the next section is based on the aggregated quantiles by `patientID`. Users are encouraged to learn more about the `groupedHyperframe` class and the function `aggregate_quantile()` from package **`groupedHyperframe`** [vignettes](https://rpubs.com/tingtingzhan/groupedHyperframe).
+## Step 1: Compute Aggregated Quantiles
+
+Function `aggregate_quantile()` first converts each element of the numeric-hypercolumn *`logKi67`* into sample `quantile`s at a pre-specified grid of `prob`abilitie`s` $\{p_k, k=1,\cdots,K \} \in [0,1]$, then aggregates the quantiles of multiple *`tissueID`*'s per *`patientID`* by point-wise means (default of parameter `f_aggr_`). Note that the aggregation must be performed at the level of biologically *independent* clusters, e.g., *`~patientID`*, to produce independent quantile predictors.
 
 ```{r}
 #| message: false
-s = Ki67 |>
+Ki67q = Ki67 |>
   aggregate_quantile(by = ~ patientID, probs = seq.int(from = .01, to = .99, by = .01))
-s |> head()
 ```
 
-## Linear Quantile Index
-
-We fit a linear `hyper_gam` model, i.e., a `gam` model with the `numeric`-`hypercolumn` *`logKi67.quantile`* using `mgcv::s` smooth.
+The returned object *`Ki67q`* is a hyper data frame `hyperframe` with a numeric-hypercolumn of aggregated sample quantiles *`logKi67.quantile`* per *`patientID`*. Users are encouraged to learn more about the function `aggregate_quantile()` from package **`groupedHyperframe`** vignettes ([RPubs](https://rpubs.com/tingtingzhan/groupedHyperframe), [`CRAN`](https://CRAN.R-project.org/package=groupedHyperframe/vignettes/intro.html)), section *Grouped Hyper Data Frame*, subsection *From `data.frame`*. 
 
 ```{r}
-m0 = hyper_gam(PFS ~ logKi67.quantile, data = s)
+Ki67q |> head()
 ```
 
-### Visualization
+## Step 2: Estimate Integrand Surface
 
-Function `integrandSurface()` creates an interactive `htmlwidget` by package **`plotly`** to illustrate the integrand surface of linear quantile indices $p\in[0,1]$ and $q\in\text{range}\big(Q_i(p)\big)$ for all subjects $i=1,\cdots,n$.
+Linear quantile index (QI) (@eq-QI) is a predictor in a functional generalized linear model [@James02],
 
 $$
-\hat{S}_0(p,q) = \hat{\beta}(p)\cdot q
-$$
+\text{QI}_{i}=\int_{0}^{1} \beta(p)Q_i(p)dp
+$$ {#eq-QI}
 
-as well as the projections of the integrand curves of selected subjects onto the $(p,q)$- and $(S,p)$-plane. Note that this `htmlwidget` is suppressed in the vignette on `CRAN` due to package size limit. This `htmlwidget` can be viewed and interacted with on [RPubs](https://rpubs.com/tingtingzhan/QuantileIndex).
+where $Q_i(p)$ is the (aggregated) sample quantiles *`logKi67.quantile`* for the $i$-th subject, and $\beta(p)$ is the unknown coefficient function to be estimated. We use function `hyper.gam::hyper_gam()` to fit a generalized additive model `gam` with integrated *linear spline-based* smoothness estimation [function `mgcv::s()`, @mgcv_s]. This is a scalar-on-function model [@Reiss17] that predicts a **scalar** outcome (e.g., progression free survival time *`PFS[,1L]`*) using the aggregated quantiles **function** as a functional predictor.
+
+```{r}
+m0 = hyper_gam(PFS ~ logKi67.quantile, data = Ki67q)
+```
+
+Nonlinear quantile index (nlQI) (@eq-nlQI) is a predictor in the functional generalized additive model [@McLean14],
+
+$$
+\text{nlQI}_{i}= \int_{0}^{1} F\big(p, Q_i(p)\big)dp
+$$ {#eq-nlQI}
+
+where $F(\cdot,\cdot)$ is an unknown bivariate twice differentiable function. We use function `hyper.gam::hyper_gam(., nonlinear = TRUE)` to fit a generalized additive model `gam` with *tensor product interaction* estimation [function `mgcv::ti()`, @mgcv_ti].
+
+```{r}
+m1 = hyper_gam(PFS ~ logKi67.quantile, data = Ki67q, nonlinear = TRUE)
+```
+
+The returned `hyper_gam` objects *`m0`* and *`m1`* inherit from the `S3` class `gam` defined in `R` package **`mgcv`** [@mgcv]. Such inheritance enables the use of `S3` method dispatches on `gam` objects defined in package **`mgcv`** on the `hyper_gam` objects.
+
+Function `integrandSurface()` creates an interactive `htmlwidget` [@htmlwidgets] visualization of the estimated integrand surfaces for the linear (@eq-QI) or nonlinear quantile index (@eq-nlQI) using `R` package **`plotly`** [@plotly]. The integrand surfaces, defined on $p\in[0,1]$ and $q\in\text{range}\big\{Q_i(p), i=1,\cdots,n\big\}$, are
+
+$$
+\begin{cases}
+\hat{S}_{\text{linear}}(p,q) & = \hat{\beta}(p)\cdot q\\
+\hat{S}_{\text{nonlinear}}(p,q) & = \hat{F}(p,q)
+\end{cases}
+$$ {#eq-S}
+
+Also in this interactive visualization are
+
+-   the estimated linear **integrand paths** $\hat{\beta}(p)Q_i(p)$ or the nonlinear integrand paths $\hat{F}(p, Q_i(p))$ on the integrand surfaces (@eq-S);
+
+-   the sample quantiles $Q_i(p)$, i.e., the ***projections*** of the estimated linear or nonlinear integrand path onto the $(p,q)$-plane (a.k.a., the "floor")
+
+-   the ***projections*** of the estimated linear or nonlinear integrand path onto the $(p,s)$-plane (a.k.a., the "backwall"), so that the area under each projected path is equal to the estimated linear (@eq-QI) or nonlinear quantile index (@eq-nlQI).
+
+@fig-integrandSurface is an interactive `htmlwidget` visualization of the nonlinear integrand surface, integrand paths and their projections to the "floor" and "backwall".  Users should remove the argument `n` in `integrandSurface(, n=101L)`, and use the default `n=501L` instead, for a more refined surface. We must use `n=101L` to reduce the `htmlwidget` object size, in order to comply with `CRAN` and/or [RPubs](https://rpubs.com) file size limit. For the same reason, the interactive visualization of the linear integrand surface is suppressed in this vignette. Users are strongly encouraged to interact with it on their local device.
 
 ```{r}
 #| eval: false
 #| fig-width: 5
 #| fig-height: 5
-integrandSurface(m0)
-```
-
-Less fancy illustrations of the integrand surface include `persp`ective and `contour` plots provided by package **`graphics`** shipped with vanilla **`R`**.
-
-```{r}
-#| fig-width: 3
-#| fig-height: 3
-#| warning: false
-par(mar = c(2, 2, 0, 0))
-persp(m0)
-par(op)
+m0 |> integrandSurface() # please interact with it on your local computer 
 ```
 
 ```{r}
-#| fig-width: 3
-#| fig-height: 3
-#| warning: false
-par(mar = c(4, 5, 1, 0))
-contour(m0)
-par(op)
+#| eval: true
+#| label: fig-integrandSurface
+#| fig-width: 5
+#| fig-height: 5
+#| fig-align: left
+#| fig-cap: 'Nonlinear integrand surface, integrand paths and their projections to the "floor" and "backwall"'
+m1 |> integrandSurface(n = 101L)
 ```
 
-### $k$-Fold Prediction
+Static illustrations of the estimated integrand surfaces, e.g., the `persp`ective (`S3` method dispatch `persp.hyper_gam()`) and `contour` (`S3` method dispatch `contour.hyper_gam()`) plots, are produced by calling the `S3` generics `persp()` and `contour()` in package **`graphics`** shipped with vanilla **`R`**. These static figures are suppressed to reduce the file size of this vignette.
 
-Linear quantile index is the $k$-fold prediction of the linear `hyper_gam` model *`m0`*.
+```{r}
+#| warning: false
+#| fig-show: hide
+m0 |> persp() # a static figure
+```
+
+```{r}
+#| warning: false
+#| fig-show: hide
+m0 |> contour() # a static figure
+```
+
+```{r}
+#| warning: false
+#| fig-show: hide
+m1 |> persp() # a static figure
+```
+
+```{r}
+#| warning: false
+#| fig-show: hide
+m1 |> contour() # a static figure
+```
+
+Visualization of the integrand surface (@eq-S) in functions `integrandSurface()`, `persp.hyper_gam()` and `contour.hyper_gam()` is inspired by function `mgcv::vis.gam()`.  Visualization of the *integrand paths*, as well as their projections on the $(p,q)$- and $(p,s)$-plane, is an original idea and design by Tingting Zhan.
+
+
+## Step 3: Compute Quantile Index Predictor
+
+<!---
+### Separate Training & Test Data Sets
+-->
+
+Linear and nonlinear quantile indices are the predictors in the functional generalized linear model (@eq-QI) and the functional generalized additive model (@eq-nlQI), respectively. Let's consider a conventional scenario that we first fit a `hyper_gam` model to the training data set, then compute the quantile index predictors in the training data set, as well as in the test data set, using the training model.
+
+In the following example, the 622 patients in hyper data frame *`Ki67q`* are partitioned into a training data set with 498 patients (80% of observations) and a test data set with 124 patients (20% of observations).
+
+```{r}
+set.seed(16); id = Ki67q |> nrow() |> seq_len() |> caret::createDataPartition(p = .8)
+Ki67q_0 = Ki67q[id[[1L]],] # training set
+Ki67q_1 = Ki67q[-id[[1L]],] # test set
+```
+
+Next, a functional generalized additive model is fitted to the training data set *`Ki67q_0`*,
+
+```{r}
+m1a = hyper_gam(PFS ~ logKi67.quantile, nonlinear = TRUE, data = Ki67q_0)
+```
+
+<!---
+#### Training Data Set
+-->
+
+### Training Data Set
+
+For the training data set, the linear (@eq-QI) and nonlinear quantile indices (@eq-nlQI) are saved in the `$linear.predictors` element of a `hyper_gam` (or `gam`) object,
+
+```{r}
+m1a$linear.predictors |> 
+  head()
+```
+
+Note that the code snippet `$linear.predictors` is shared by both linear (@eq-QI) and nonlinear quantile indices (@eq-nlQI), as it comes from the returned object of function `mgcv::gam()` for both linear spline-based smoothness estimation `mgcv::s()` and tensor product interaction estimation `mgcv::ti()`, as of package **`mgcv`** version 1.9.3.
+
+We can, but we ***should not***, use the quantile indices on the training data set for downstream analysis, because these quantile indices are optimized on the training data set and the results would be optimistically biased.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Optimistically biased!!"
+Ki67q_0[,c('PFS', 'age', 'race')] |> 
+  as.data.frame() |> # invokes spatstat.geom::as.data.frame.hyperframe()
+  data.frame(nlQI = m1a$linear.predictors) |>
+  coxph(formula = PFS ~ age + nlQI, data = _)
+```
+
+<!---
+#### Test Data Set
+-->
+
+### Test Data Set
+
+The `S3` method dispatch `hyper.gam::predict.hyper_gam()` calculates the quantile index predictors of the test data set, based on the training model *`m1a`*.
+
+```{r}
+m1a |>
+  predict(newdata = Ki67q_1) |> 
+  head()
+```
+
+The `S3` method dispatch `hyper.gam::predict.hyper_gam()` is a convenient wrapper and slight modification of the function `mgcv::predict.gam()`. The use of `S3` generic `stats::predict()`, which is typically for predict**ed** values, could be confusing, but we choose to follow the practice and nomenclature of function `mgcv::predict.gam()`.
+
+We may use the quantile indices computed in the test data set for downstream analysis,
+
+```{r}
+Ki67q_1[,c('PFS', 'age', 'race')] |> 
+  as.data.frame() |> # invokes spatstat.geom::as.data.frame.hyperframe()
+  data.frame(nlQI = predict(m1a, newdata = Ki67q_1)) |>
+  coxph(formula = PFS ~ age + nlQI, data = _)
+```
+
+<!---
+
+### $k$-Fold Cross-Prediction
+
+[This is why for inference ("downstream analysis”),  we need either a separate test set or cross-prediction with QI for each subject computed using the integrand surface estimated excluding that subject.]{style="background-color: #FFFF00"}
+
+$k$-fold Cross-Prediction of QIs based on the linear `hyper_gam` model *`m0`*.
 
 ```{r}
 set.seed(145); QI = m0 |> 
   kfoldPredict.hyper_gam(k = 10L, mc.cores = 1L)
 ```
 
-Diagnosis of linear quantile index *`QI`*
+Comparison of QIs in different folds (figure suppressed for now):
 
 ```{r}
 #| fig-width: 4
 #| fig-height: 3.5
 #| warning: false
-par(mar = c(4, 5, 1, 0))
+#| eval: false
 boxplot(QI ~ attr(QI, 'fold'), xlab = 'Fold')
-par(op)
 ```
 
-### Regression Model using Linear Quantile Index
-
-```{r}
-suppressWarnings(sQI <- cbind(s, spatstat.geom::hyperframe(QI = QI)) |> 
-                   as.data.frame())
-coxph(PFS ~ QI, data = sQI) |> summary()
-```
-
-## Nonlinear Quantile Index
-
-We fit a nonlinear `hyper_gam` model, i.e., a `gam` model with the `numeric`-`hypercolumn` *`logKi67.quantile`* using tensor product interaction `mgcv::ti` smooth.
-
-```{r}
-m1 = hyper_gam(PFS ~ logKi67.quantile, data = s, nonlinear = TRUE)
-```
-
-### Visualization
-
-Function `integrandSurface()` illustrates the integrand surface of nonlinear quantile indices $p\in[0,1]$ and $q\in\text{range}\big(Q_i(p)\big)$ for all subjects $i=1,\cdots,n$.
-
-$$
-\hat{S}_0(p,q) = \hat{F}(p,q)
-$$ as well as the projections of the integrand curves of selected subjects onto the $(p,q)$- and $(S,p)$-plane. Note that this `htmlwidget` is suppressed in the vignette on `CRAN` due to package size limit. This `htmlwidget` can be viewed and interacted with on [RPubs](https://rpubs.com/tingtingzhan/QuantileIndex).
-
-```{r eval=FALSE,fig.width=5, fig.height=5}
-integrandSurface(m1)
-```
-
-Less fancy illustrations of the integrand surface include `persp`ective and `contour` plots provided by package **`graphics`** shipped with vanilla **`R`**.
-
-```{r}
-#| fig-width: 3
-#| fig-height: 3
-#| warning: false
-par(mar = c(2, 2, 0, 0))
-persp(m1)
-par(op)
-```
-
-```{r}
-#| fig-width: 3
-#| fig-height: 3
-#| warning: false
-par(mar = c(4, 5, 1, 0))
-contour(m1)
-par(op)
-```
-
-### $k$-Fold Prediction
-
-Nonlinear quantile index is the $k$-fold prediction of the nonlinear `hyper_gam` model *`m1`*.
+$k$-fold Cross-Prediction of nlQIs based on nonlinear `hyper_gam` model *`m1`*.
 
 ```{r}
 set.seed(145); nlQI = m1 |> kfoldPredict.hyper_gam(k = 10L, mc.cores = 1L)
 ```
 
-Diagnosis of nonlinear quantile index *`nlQI`*.
+Comparison of nlQIs in different folds (figure suppressed for now):
 
 ```{r}
 #| fig-width: 4
 #| fig-height: 3.5
 #| warning: false
-par(mar = c(4, 5, 1, 0))
+#| eval: false
 boxplot(nlQI ~ attr(nlQI, 'fold'), xlab = 'Fold')
-par(op)
 ```
 
-### Regression Model using Linear Quantile Index
+Regression model with QI or nlQI predictors
 
 ```{r}
-suppressWarnings(s_nlQI <- cbind(s, spatstat.geom::hyperframe(nlQI = nlQI)) |> 
-                   as.data.frame())
-coxph(PFS ~ nlQI, data = s_nlQI) |> summary()
+#| warning: false
+Ki67q |>
+  cbind(spatstat.geom::hyperframe(QI = QI)) |> 
+  as.data.frame() |>
+  coxph(formula = PFS ~ QI) |> summary()
 ```
+
+Regression model with nlQI predictors.
+
+```{r}
+#| warning: false
+Ki67q |>
+  cbind(spatstat.geom::hyperframe(nlQI = nlQI)) |> 
+  as.data.frame() |>
+  coxph(formula = PFS ~ nlQI) |> 
+  summary()
+```
+
+-->
 
 # References
 

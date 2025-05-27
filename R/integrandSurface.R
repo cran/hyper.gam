@@ -138,7 +138,7 @@ integrandSurface <- function(
     proj_xz = TRUE,
     proj_beta = FALSE, # bug with my latest hyperframe !!!
     n = 501L,
-    newid = seq_len(min(50L, .row_names_info(newdata, type = 2L))), 
+    newid = min(5L, .row_names_info(newdata, type = 2L)) |> seq_len(), 
     qlim = range(X, newX),
     axis_col = c('dodgerblue', 'deeppink', 'darkolivegreen'),
     beta_col = 'purple',
@@ -157,18 +157,19 @@ integrandSurface <- function(
   dots <- list(...)
   if (!all(vapply(dots, FUN = inherits, what = 'gam', FUN.VALUE = NA))) stop('all input needs to be `gam.matrix`')
   
-  matrix_x_ <- lapply(dots, FUN = attr, which = 'xname', exact = TRUE)
+  matrix_x_ <- dots |> lapply(FUN = attr, which = 'xname', exact = TRUE)
   if (!all(duplicated.default(matrix_x_)[-1L])) stop()
   xname <- matrix_x_[[1L]]
   
-  data_ <- unique(lapply(dots, FUN = \(i) i$data))
+  data_ <- dots |> lapply(FUN = \(i) i$data) |> unique()
   if (length(data_) > 1L) stop('data not same')
   data <- data_[[1L]]
   
   signs <- if (sign_adjusted) {
-    vapply(dots, FUN = \(x) {
-      x |> cor_xy() |> sign()
-    }, FUN.VALUE = NA_real_)
+    dots |> 
+      vapply(FUN = \(x) {
+        x |> cor_xy() |> sign()
+      }, FUN.VALUE = NA_real_)
   } else rep(1, times = length(dots))
   
   X <- data[[xname]]
@@ -177,7 +178,7 @@ integrandSurface <- function(
   
   newX <- newdata[[xname]]
   if (!is.matrix(newX)) stop('`newdata` does not contain a matrix column of functional predictor values')
-  newx. <- as.double(colnames(newX))
+  newx. <- newX |> colnames() |> as.double()
   if (!all.equal.numeric(newx., x.)) stop('grid of training and test data must be exactly the same')
   
   l <- unique.default(data$L)
@@ -201,76 +202,74 @@ integrandSurface <- function(
     # plot_ly(, type = 'surface') lay out `z` differently from ?graphics::persp !!!
   }, x = dots, sgn = signs, SIMPLIFY = FALSE)
   
-  zmin <- min(unlist(zs))
-  zmax <- max(unlist(zs))
+  zmin <- zs |> unlist() |> min()
+  zmax <- zs |> unlist() |> max()
   
-  p <- plot_ly(x = x_, y = y_)
+  #p <- plot_ly(x = x_, y = y_)
+  p <- plot_ly()
   
   for (z_ in zs) {
-    p <- add_surface(
-      p = p, 
-      z = z_, cmin = zmin, cmax = zmax, 
-      # contours = list(z = list(show = TRUE)), # works :)
-      colorscale = list(c(0, 1), surface_col), 
-      showscale = FALSE)
+    p <- p |> 
+      add_surface(
+        x = x_, y = y_,
+        z = z_, cmin = zmin, cmax = zmax, 
+        # contours = list(z = list(show = TRUE)), # works :)
+        colorscale = list(c(0, 1), surface_col), 
+        showscale = FALSE
+      )
   }
-  p <- layout(p = p, scene = list(
-    xaxis = list(title = 'Probability (p)', tickformat = '.0%', color = axis_col[1L]), 
-    yaxis = list(title = 'Quantile (q)', color = axis_col[2L]),
-    zaxis = list(title = 'Integrand (s)', color = axis_col[3L])
-  ))
+  
+  p <- p |> 
+    layout(scene = list(
+      xaxis = list(title = 'Probability (p)', tickformat = '.0%', color = axis_col[1L]), 
+      yaxis = list(title = 'Quantile (q)', color = axis_col[2L]),
+      zaxis = list(title = 'Integrand (s)', color = axis_col[3L])
+    ))
   
   if (!length(newid)) return(p)
   
   if (!is.integer(newid) || anyNA(newid) || any(newid > nrow(newX))) stop('illegal `newid`')
   
-  d_subj <- data.frame(
+  d <- data.frame(
     x = x.,
-    y = c(t.default(newX[newid, , drop = FALSE])),
+    y = newX[newid, , drop = FALSE] |> t.default() |> c(),
     id = rep(newid, each = nx),
     L = l
   )
-  names(d_subj)[2] <- as.character(xname)
-  z_subj <- mapply(FUN = \(x, sgn) {
-    sgn * predict.gam(x, newdata = d_subj, se.fit = FALSE, type = 'link')
-  }, x = dots, sgn = signs, SIMPLIFY = FALSE)
-  
   if (proj_xy) {
-    
-    p <- add_paths(
-    #p <- add_trace(
-      p = p, data = d_subj, 
-      x = ~ x, y = asOneSidedFormula(xname), z = zmin, 
-      name = ~ id, color = ~ id,
-      showlegend = FALSE, # (length(newid) <= 10L),
-      line = list(
-        width = if (length(newid) <= 5L) 5/5 else 2/5
-      ))
-    
-  } # projection on x-y plain: Q(p) curve
+    p <- p |> 
+      add_paths(
+        x = d$x, y = d$y, z = zmin, name = d$id, color = d$id, 
+        showlegend = FALSE,
+        line = list(width = 4)
+      )
+  } # projection on x-y plain
+  
+  d_ <- d
+  names(d_)[2] <- as.character(xname)
+  z_subj <- mapply(FUN = \(x, sgn) {
+    sgn * predict.gam(x, newdata = d_, se.fit = FALSE, type = 'link')
+  }, x = dots, sgn = signs, SIMPLIFY = FALSE)
   
   if (proj_xz) {
     # projection on x-z plain, F(p, Q(p)) curve
     # this is only done if (length(dots) == 1L); otherwise too messy
     if (length(dots) == 1L) {
       for (i in seq_along(dots)) {
-        p <- add_paths(
-          p = p, data = d_subj, 
-          x = ~ x, y = qlim[2L], z = z_subj[[i]], 
-          name = ~ id, color = ~ id,
-          showlegend = FALSE, # (length(newid) <= 10L),
-          line = list(
-            width = if (length(newid) <= 5L) 5/5 else 2/5
-          ))
+        p <- p |> 
+          add_paths(
+            x = d$x, y = qlim[2L], z = z_subj[[i]], name = d$id, color = d$id,
+            showlegend = FALSE,
+            line = list(width = 4)
+          )
       }
     }
-  } # projection on x-z plain, F(p, Q(p)) curve
+  } # projection on x-z plain
   
   if (proj_beta) {
     if (length(dots) == 1L) { # will remove this bracket in future!!
       for (i in seq_along(dots)) {
         if (dots[[i]]$formula[[3L]][[1L]] == 's') {
-          
           d_beta <- data.frame(
             x = x.,
             y = 1,
@@ -294,22 +293,14 @@ integrandSurface <- function(
   } # projection of beta(p), for linear models
   
   for (i in seq_along(dots)) {
-    p <- add_paths(
-      p = p, data = d_subj, 
-      x = ~ x, y = asOneSidedFormula(xname), 
-      z = z_subj[[i]], 
-      name = ~ id, color = ~ id,
-      showlegend = FALSE, # (length(newid) <= 10L),
-      line = list(
-        width = if (length(newid) <= 5L) 5 else 2
-      ))
+    p <- p |> 
+      add_paths(
+        x = d$x, y = d$y, z = z_subj[[i]], name = d$id, color = d$id,
+        showlegend = FALSE,
+        line = list(width = 4)
+      )
   }
   
-  
-  
-  #p <- layout(p = p, legend = list(
-  #  title = list(text = if (identical(newdata, data)) 'Training Subj' else 'Test Subj'))
-  #)
   return(p)
   
 }
