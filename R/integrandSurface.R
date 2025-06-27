@@ -213,7 +213,15 @@ integrandSurface <- function(
       add_surface(
         x = x_, y = y_,
         z = z_, cmin = zmin, cmax = zmax, 
-        # contours = list(z = list(show = TRUE)), # works :)
+        contours = list(
+          z = list(
+            show = TRUE,
+            start = zmin, end = zmax, size = (zmax - zmin)/21,
+            usecolormap = TRUE,
+            highlightcolor = "#ff0000",
+            project = list(z = TRUE)
+          )
+        ),
         colorscale = list(c(0, 1), surface_col), 
         showscale = FALSE
       )

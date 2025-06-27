@@ -13,7 +13,6 @@
 
 
 ## -----------------------------------------------------------------------------
-#| message: false
 library(groupedHyperframe)
 library(hyper.gam)
 library(survival)
@@ -42,6 +41,12 @@ Ki67q |> head()
 
 ## -----------------------------------------------------------------------------
 m0 = hyper_gam(PFS ~ logKi67.quantile, data = Ki67q)
+
+
+## -----------------------------------------------------------------------------
+m0_alternative = hyper_gam(Surv(recfreesurv_mon, recurrence) ~ logKi67.quantile, data = Ki67q) 
+# this is also okay
+# tzhan is debating whether to document this ...
 
 
 ## -----------------------------------------------------------------------------
@@ -100,23 +105,12 @@ m1a = hyper_gam(PFS ~ logKi67.quantile, nonlinear = TRUE, data = Ki67q_0)
 
 
 ## -----------------------------------------------------------------------------
-m1a$linear.predictors |> 
-  head()
-
-
-## -----------------------------------------------------------------------------
 #| code-fold: true
 #| code-summary: "Optimistically biased!!"
 Ki67q_0[,c('PFS', 'age', 'race')] |> 
   as.data.frame() |> # invokes spatstat.geom::as.data.frame.hyperframe()
-  data.frame(nlQI = m1a$linear.predictors) |>
+  data.frame(nlQI = predict(m1a, newdata = Ki67q_0)) |>
   coxph(formula = PFS ~ age + nlQI, data = _)
-
-
-## -----------------------------------------------------------------------------
-m1a |>
-  predict(newdata = Ki67q_1) |> 
-  head()
 
 
 ## -----------------------------------------------------------------------------

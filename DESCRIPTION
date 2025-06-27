@@ -1,8 +1,7 @@
 Package: hyper.gam
 Type: Package
 Title: Generalized Additive Models with Hyper Column
-Version: 0.1.1
-Date: 2025-05-26
+Version: 0.1.2
 Description: Generalized additive models with a numeric hyper column
        tabulated on a common grid. Sign-adjustment based on the
        correlation of model prediction and a selected slice of the
@@ -26,11 +25,11 @@ Suggests: knitr, quarto, rmarkdown, spatstat.geom, survival,
         matrixStats, htmlwidgets
 VignetteBuilder: quarto, knitr
 NeedsCompilation: no
-Packaged: 2025-05-27 02:18:49 UTC; tingtingzhan
+Packaged: 2025-06-27 16:44:13 UTC; tingtingzhan
 Author: Tingting Zhan [aut, cre] (ORCID:
     <https://orcid.org/0000-0001-9971-4844>),
   Inna Chervoneva [aut] (ORCID: <https://orcid.org/0000-0002-9104-4505>),
   Erjia Cui [ctb] (ORCID: <https://orcid.org/0000-0003-3576-2892>)
 Maintainer: Tingting Zhan <tingtingzhan@gmail.com>
 Repository: CRAN
-Date/Publication: 2025-05-27 09:10:12 UTC
+Date/Publication: 2025-06-27 17:00:08 UTC

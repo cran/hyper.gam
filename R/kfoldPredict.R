@@ -1,4 +1,10 @@
 
+
+
+
+
+
+
 # `kfoldPredict` https://www.mathworks.com/help/stats/classreg.learning.partition.regressionpartitionedmodel.kfoldpredict.html
 
 
@@ -27,12 +33,12 @@
 #' 
 #' @keywords internal
 #' @importFrom caret createFolds
-#' @importFrom parallel mclapply detectCores
+#' @importFrom parallel mclapply
 #' @export
 kfoldPredict.hyper_gam <- function(
     object, 
     k, 
-    mc.cores = switch(.Platform$OS.type, windows = 1L, detectCores()), 
+    mc.cores = getOption('mc.cores'), 
     ...
 ) { 
   
@@ -87,6 +93,9 @@ kfoldPredict.hyper_gam <- function(
 }
 
 # https://www.geeksforgeeks.org/k-fold-cross-validation-in-r-programming/
+
+
+
 
 
 

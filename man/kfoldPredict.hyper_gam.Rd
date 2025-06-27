@@ -4,12 +4,7 @@
 \alias{kfoldPredict.hyper_gam}
 \title{\eqn{k}-Fold Prediction of \link{hyper_gam} Model}
 \usage{
-kfoldPredict.hyper_gam(
-  object,
-  k,
-  mc.cores = switch(.Platform$OS.type, windows = 1L, detectCores()),
-  ...
-)
+kfoldPredict.hyper_gam(object, k, mc.cores = getOption("mc.cores"), ...)
 }
 \arguments{
 \item{object}{a \link{hyper_gam} object}
