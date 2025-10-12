@@ -168,10 +168,22 @@ augdata <- function(
   if (!inherits(X, what = 'listof')) stop(xname |> col_blue(), ' in `data` must be hypercolumn')
   
   X. <- X |> do.call(what = rbind)
-  x. <- X. |> colnames() |> as.double()
+  
+  cnm <- X. |> 
+    colnames()
+  x. <- if (all(grepl(pattern = '%$', x = cnm))) {
+    # returned from ?stats:::quantile.default
+    tmp <- cnm |>
+      gsub(pattern = '%$', replacement = '') |>
+      as.double()
+    tmp / 1e2
+  } else cnm |> as.double() 
+  
   if (!length(x.) || !is.numeric(x.) || anyNA(x.) || is.unsorted(x., strictly = TRUE)) {
     stop(xname |> col_blue(), ' must have names convertible to strictly-increasing numerics')
   }
+  
+  colnames(X.) <- x.
   
   dat <- unclass(data)$df
   dat[[xname]] <- X.

@@ -1,0 +1,24 @@
+
+
+bibentry(
+  bibtype = 'article',
+  title = 'Quantile Index predictors using R package `hyper.gam`',
+  author = c('Tingting Zhan', 'Misung Yi', 'Inna Chervoneva' ),
+  journal = 'Bioinformatics',
+  pages = 'btaf430',
+  year = '2025', 
+  month = '07',
+  issn = '1367-4811',
+  doi = '10.1093/bioinformatics/btaf430'
+)
+  
+  
+bibentry(
+  bibtype = 'Manual',
+  title = 'hyper.gam: Generalized Additive Models with Hyper Column',
+  author = c('Tingting Zhan', 'Inna Chervoneva'),
+  year = '2025',
+  note = 'R package version 0.1.3',
+  url = 'https://CRAN.R-project.org/package=hyper.gam',
+  doi = '10.32614/CRAN.package.hyper.gam'
+)

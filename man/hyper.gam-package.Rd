@@ -12,6 +12,13 @@ Generalized additive models with a numeric hyper column tabulated on a common gr
 Help files of individual functions are intentionally suppressed in the \code{pdf} manual.
 Users are encouraged to get started with the vignettes.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/tingtingzhan/hyper.gam}
+}
+
+}
 \author{
 \strong{Maintainer}: Tingting Zhan \email{tingtingzhan@gmail.com} (\href{https://orcid.org/0000-0001-9971-4844}{ORCID})
 
