@@ -18,7 +18,7 @@ bibentry(
   title = 'hyper.gam: Generalized Additive Models with Hyper Column',
   author = c('Tingting Zhan', 'Inna Chervoneva'),
   year = '2025',
-  note = 'R package version 0.1.3',
+  note = 'R package version 0.2.0',
   url = 'https://CRAN.R-project.org/package=hyper.gam',
   doi = '10.32614/CRAN.package.hyper.gam'
 )

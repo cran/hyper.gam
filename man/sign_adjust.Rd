@@ -12,7 +12,7 @@ sign_adjust(object, ...)
 \arguments{
 \item{object}{..}
 
-\item{...}{parameters of function \code{\link[=cor_xy.gam]{cor_xy.gam()}}}
+\item{...}{parameters of function \code{\link[=cor_xy.hyper_gam]{cor_xy.hyper_gam()}}}
 }
 \value{
 Function \code{\link[=sign_adjust.hyper_gam]{sign_adjust.hyper_gam()}} returns a \link[base]{numeric} \link[base]{vector}.

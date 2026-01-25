@@ -32,22 +32,20 @@ cor_xy <- function(object, ...) UseMethod(generic = 'cor_xy')
 # are positively correlated with the user-selected \eqn{X_{\cdot,j}}.
 #' 
 #' @returns
-#' Function [cor_xy.gam()] returns a \link[base]{numeric} scalar or \link[base]{vector} of 
+#' Function [cor_xy.hyper_gam()] returns a \link[base]{numeric} scalar or \link[base]{vector} of 
 #' \link[stats]{cor}relation(s).
 #' 
 #' @keywords internal
 #' @importFrom stats cor quantile
-#' @export cor_xy.gam
+#' @export cor_xy.hyper_gam
 #' @export
-cor_xy.gam <- function(object, probs = .5, ...) { # parameter `xfom` removed
-  
-  # if (!inherits(object, what = 'hyper_gam')) # do not force this
-  
-  model <- object$model
-  if (!length(model)) stop('should not happen!')
+cor_xy.hyper_gam <- function(object, probs = .5, ...) { # parameter `xfom` removed
   
   xname <- attr(object, which = 'xname', exact = TRUE)
   if (!is.symbol(xname)) stop('input must carry attr xname')
+  
+  model <- object$model
+  if (!length(model)) stop('should not happen!')
   
   x <- eval(xname, envir = model)
   if (!is.matrix(x)) stop('`x` information should be matrix')

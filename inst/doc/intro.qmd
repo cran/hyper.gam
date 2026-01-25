@@ -1,24 +1,6 @@
 ---
-title: "Supervised Learning Tools for Deriving Biomarkers based on Single-Cell Data"
+title: "R package `hyper.gam`"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-author: 
-  - name: Tingting Zhan
-    orcid: 0000-0001-9971-4844
-    email: tingtingzhan@gmail.com
-    affiliations: 
-      - ref: tjuh
-  - name: Inna Chervoneva
-    orcid: 0000-0002-9104-4505
-    email: Inna.Chervoneva@jefferson.edu
-    affiliations: 
-      - ref: tjuh
-affiliations:
-  - id: tjuh
-    name: Thomas Jefferson University & Hospitals
-    address: 130 South 9th Street
-    city: Philadelphia
-    state: PA
-    postal-code: 19107
 format: 
   html:
     page-layout: full
@@ -42,11 +24,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Introduction
 
-The complete vignette of R package **`hyper.gam`** (v`r packageVersion('hyper.gam')`) 
+The complete vignette of R [@R] package **`hyper.gam`** (v`r packageVersion('hyper.gam')`) 
 
-> <https://rpubs.com/tingtingzhan/hyper_gam>
+> <https://tingtingzhan.quarto.pub/groupedhyperframe/bioinformatics_btaf430.html>
 
 documents the derivation of single index predictors of scalar outcomes based on spatial and non-spatial single-cell imaging data.
 
@@ -74,13 +55,13 @@ R.version
 
 ## Enhancement & Dependency
 
-Package **`hyper.gam`** (v`r packageVersion('hyper.gam')`) `Enhances` package **`mgcv`** [@mgcv, v`r packageVersion('mgcv')`]. Details are provided in the [complete vignette](https://rpubs.com/tingtingzhan/hyper_gam).
+Package **`hyper.gam`** (v`r packageVersion('hyper.gam')`) `Enhances` package **`mgcv`** [@mgcv, v`r packageVersion('mgcv')`]. Details are provided in the [book](https://tingtingzhan.quarto.pub/groupedhyperframe/), Section 7.1.
 
 
-The dependencies of package **`hyper.gam`** are detailed in the [complete vignette](https://rpubs.com/tingtingzhan/hyper_gam). 
+The dependencies of package **`hyper.gam`** are detailed in the [book](https://tingtingzhan.quarto.pub/groupedhyperframe/), Section 7.1.
 
 
-Package **`hyper.gam`** requires the *development versions* of the **`spatstat.*`** family of packages [@spatstat15; @spatstat05]. Installation instructions are provided in the [complete vignette](https://rpubs.com/tingtingzhan/groupedHyperframe) of package **`groupedHyperframe`** [@groupedHyperframe, v`r packageVersion('groupedHyperframe')`], Section 4.1. 
+Package **`hyper.gam`** requires the *development versions* of the **`spatstat.*`** family of packages [@spatstat15; @spatstat05]. Installation instructions are provided in the [book](https://tingtingzhan.quarto.pub/groupedhyperframe/), Section 7.1.
 
 
 
@@ -94,32 +75,15 @@ utils::install.packages('groupedHyperframe')
 utils::install.packages('hyper.gam')
 ```
 
-## Getting Started
 
-Examples in the [complete vignette](https://rpubs.com/tingtingzhan/hyper_gam) require that the `search` path has
+# Acknowledgement
 
-```{r}
-#| message: false
-library(groupedHyperframe)
-library(hyper.gam)
-library(survival)
-```
-
-
-```{r}
-#| echo: false
-op = par(no.readonly = TRUE)
-#options(mc.cores = 1L) # for CRAN submission
-```
-
-## Acknowledgement
-
-This work is supported by National Institutes of Health, U.S. Department of Health and Human Services grants
+Most of this work was undertaken during Tingting Zhan’s leisure hours, with limited support from National Institutes of Health, U.S. Department of Health and Human Services grants
 
 -   R01CA222847 ([I. Chervoneva](https://orcid.org/0000-0002-9104-4505), [T. Zhan](https://orcid.org/0000-0001-9971-4844), and [H. Rui](https://orcid.org/0000-0002-8778-261X))
 -   R01CA253977 (H. Rui and I. Chervoneva).
 
-The authors thank
+The author thanks
 
 -   [Erjia Cui](https://orcid.org/0000-0003-3576-2892)'s contribution to function `hyper_gam()`.
 

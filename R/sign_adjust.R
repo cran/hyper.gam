@@ -4,7 +4,7 @@
 #' 
 #' @param object ..
 #' 
-#' @param ... parameters of function [cor_xy.gam()]
+#' @param ... parameters of function [cor_xy.hyper_gam()]
 #' 
 #' @keywords internal
 #' @name sign_adjust
@@ -20,7 +20,7 @@ sign_adjust <- function(object, ...) UseMethod(generic = 'sign_adjust')
 sign_adjust.hyper_gam <- function(object, ...) {
   
   sgn <- object |>
-    cor_xy.gam(...) |>
+    cor_xy.hyper_gam(...) |>
     sign()
   
   return(sgn * object$linear.predictors)

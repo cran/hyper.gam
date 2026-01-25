@@ -63,7 +63,7 @@ kfoldPredict.hyper_gam <- function(
       d1 <- data[id, , drop = FALSE] # test set
       m <- tryCatch(update.hyper_gam(object, data = d0), error = identity) # training model
       if (inherits(m, what = 'error')) return(invisible())
-      i_sgn <- m |> cor_xy.gam() |> sign()
+      i_sgn <- m |> cor_xy.hyper_gam() |> sign()
       # predicted value on test set
       i_ret <- m |> predict.hyper_gam(newdata = d1, sgn = i_sgn) # with sign-adjustment
       attr(i_ret, which = 'no_sadj') <- m |> predict.hyper_gam(newdata = d1, sgn = 1) # without sign-adjustment
@@ -85,7 +85,7 @@ kfoldPredict.hyper_gam <- function(
   attr(ret, which = 'no_sadj') <- no_sadj
   
   # k-fold predictor (global sign-adjusted)
-  sgn_global <- object |> cor_xy.gam() |> sign()
+  sgn_global <- object |> cor_xy.hyper_gam() |> sign()
   attr(ret, which = 'global_sadj') <- no_sadj * sgn_global
   
   return(ret)

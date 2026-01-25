@@ -11,16 +11,3 @@ R.version
 # utils::install.packages('groupedHyperframe')
 # utils::install.packages('hyper.gam')
 
-
-## -----------------------------------------------------------------------------
-#| message: false
-library(groupedHyperframe)
-library(hyper.gam)
-library(survival)
-
-
-## -----------------------------------------------------------------------------
-#| echo: false
-op = par(no.readonly = TRUE)
-#options(mc.cores = 1L) # for CRAN submission
-

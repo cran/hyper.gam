@@ -23,7 +23,7 @@ update.hyper_gam <- function(object, ...) {
   ret <- update.default(object, ...)
   # ret <- NextMethod(generic = 'update') # error
   
-  attr(ret, which = 'xname') <- attr(object, which = 'xname', exact = TRUE) # needed by [cor_xy.gam]
+  attr(ret, which = 'xname') <- attr(object, which = 'xname', exact = TRUE) # needed by [cor_xy.hyper_gam]
   class(ret) <- c('hyper_gam', class(ret))
   return(ret)
 }

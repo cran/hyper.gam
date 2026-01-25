@@ -1,7 +1,11 @@
 
-
-
+#' @title `S3` Generic \link[nlme]{getData} on Class \link[mgcv]{gam}
+#' 
+#' @param object a \link[mgcv]{gam} object
+#' 
+#' @keywords internal
 #' @importFrom nlme getData
+#' @export getData.gam
 #' @export
 getData.gam <- function(object) {
   

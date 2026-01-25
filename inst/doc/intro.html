@@ -2,15 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Tingting Zhan">
-<meta name="author" content="Inna Chervoneva">
-<meta name="dcterms.date" content="2025-10-12">
+<meta name="dcterms.date" content="2026-01-24">
 
-<title>Supervised Learning Tools for Deriving Biomarkers based on Single-Cell Data</title>
+<title>R package hyper.gam</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -228,45 +226,40 @@ text-decoration: underline; }
 
 
 <header id="title-block-header">
-<h1 class="title">Supervised Learning Tools for Deriving Biomarkers based on Single-Cell Data</h1>
-<p class="author">Tingting Zhan</p>
-<p class="author">Inna Chervoneva</p>
+<h1 class="title">R package <code>hyper.gam</code></h1>
 
-<p class="date">2025-10-12</p>
+<p class="date">2026-01-24</p>
 </header>
 
 <nav id="TOC" role="doc-toc">
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction"><span class="header-section-number">1</span> Introduction</a></li>
-  <li><a href="#prerequisite" id="toc-prerequisite"><span class="header-section-number">2</span> Prerequisite</a>
+  <li><a href="#prerequisite" id="toc-prerequisite"><span class="header-section-number">1</span> Prerequisite</a>
   <ul>
-  <li><a href="#environment" id="toc-environment"><span class="header-section-number">2.1</span> Environment</a></li>
-  <li><a href="#enhancement-dependency" id="toc-enhancement-dependency"><span class="header-section-number">2.2</span> Enhancement &amp; Dependency</a></li>
-  <li><a href="#installation" id="toc-installation"><span class="header-section-number">2.3</span> Installation</a></li>
-  <li><a href="#getting-started" id="toc-getting-started"><span class="header-section-number">2.4</span> Getting Started</a></li>
-  <li><a href="#acknowledgement" id="toc-acknowledgement"><span class="header-section-number">2.5</span> Acknowledgement</a></li>
+  <li><a href="#environment" id="toc-environment"><span class="header-section-number">1.1</span> Environment</a></li>
+  <li><a href="#enhancement-dependency" id="toc-enhancement-dependency"><span class="header-section-number">1.2</span> Enhancement &amp; Dependency</a></li>
+  <li><a href="#installation" id="toc-installation"><span class="header-section-number">1.3</span> Installation</a></li>
   </ul></li>
+  <li><a href="#acknowledgement" id="toc-acknowledgement"><span class="header-section-number">2</span> Acknowledgement</a></li>
   <li><a href="#references" id="toc-references"><span class="header-section-number">3</span> References</a></li>
   </ul>
 </nav>
-<h1 data-number="1" id="introduction"><span class="header-section-number">1</span> Introduction</h1>
-<p>The complete vignette of R package <strong><code>hyper.gam</code></strong> (v0.2.0)</p>
+<p>The complete vignette of R <span class="citation" data-cites="R">(R Core Team 2025)</span> package <strong><code>hyper.gam</code></strong> (v0.2.1)</p>
 <blockquote>
-<p><a href="https://rpubs.com/tingtingzhan/hyper_gam" class="uri">https://rpubs.com/tingtingzhan/hyper_gam</a></p>
+<p><a href="https://tingtingzhan.quarto.pub/groupedhyperframe/bioinformatics_btaf430.html" class="uri">https://tingtingzhan.quarto.pub/groupedhyperframe/bioinformatics_btaf430.html</a></p>
 </blockquote>
 <p>documents the derivation of single index predictors of scalar outcomes based on spatial and non-spatial single-cell imaging data.</p>
 <p>The complete vignette exceeds the file size limit allowed on <a href="https://cran.r-project.org/package=hyper.gam">CRAN</a>.</p>
-<h1 data-number="2" id="prerequisite"><span class="header-section-number">2</span> Prerequisite</h1>
-<h2 data-number="2.1" id="environment"><span class="header-section-number">2.1</span> Environment</h2>
-<p>Package <strong><code>hyper.gam</code></strong> (v0.2.0) requires R version 4.5.0 (released 2025-04-11) or higher (<a href="https://cran.r-project.org/bin/macosx/">macOS</a>, <a href="https://cran.r-project.org/bin/windows/base/">Windows</a>, <a href="https://cran.r-project.org/bin/linux/">Linux</a>).</p>
+<h1 data-number="1" id="prerequisite"><span class="header-section-number">1</span> Prerequisite</h1>
+<h2 data-number="1.1" id="environment"><span class="header-section-number">1.1</span> Environment</h2>
+<p>Package <strong><code>hyper.gam</code></strong> (v0.2.1) requires R version 4.5.0 (released 2025-04-11) or higher (<a href="https://cran.r-project.org/bin/macosx/">macOS</a>, <a href="https://cran.r-project.org/bin/windows/base/">Windows</a>, <a href="https://cran.r-project.org/bin/linux/">Linux</a>).</p>
 <p>An Integrated Development Environment (IDE), e.g., <a href="https://posit.co/download/rstudio-desktop/">RStudio</a> <span class="citation" data-cites="RStudio">(Posit team 2025)</span> or <a href="https://positron.posit.co/download.html">Positron</a>, is not required, but highly recommended.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Environment on author’s computer</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.info</span>()[<span class="fu">c</span>(<span class="st">&#39;sysname&#39;</span>, <span class="st">&#39;release&#39;</span>, <span class="st">&#39;machine&#39;</span>)]</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  sysname  release  machine </span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &quot;Darwin&quot; &quot;25.1.0&quot;  &quot;arm64&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &quot;Darwin&quot; &quot;25.2.0&quot;  &quot;arm64&quot;</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>R.version</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                _                           </span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; platform       aarch64-apple-darwin20      </span></span>
@@ -275,40 +268,33 @@ text-decoration: underline; }
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; system         aarch64, darwin20           </span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; status                                     </span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; major          4                           </span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; minor          5.1                         </span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; minor          5.2                         </span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; year           2025                        </span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; month          06                          </span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; day            13                          </span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; svn rev        88306                       </span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; month          10                          </span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; day            31                          </span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; svn rev        88974                       </span></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; language       R                           </span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; version.string R version 4.5.1 (2025-06-13)</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; nickname       Great Square Root</span></span></code></pre></div>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; version.string R version 4.5.2 (2025-10-31)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; nickname       [Not] Part in a Rumble</span></span></code></pre></div>
 </details>
 </div>
-<h2 data-number="2.2" id="enhancement-dependency"><span class="header-section-number">2.2</span> Enhancement &amp; Dependency</h2>
-<p>Package <strong><code>hyper.gam</code></strong> (v0.2.0) <code>Enhances</code> package <strong><code>mgcv</code></strong> <span class="citation" data-cites="mgcv">(Wood 2017, v1.9.3)</span>. Details are provided in the <a href="https://rpubs.com/tingtingzhan/hyper_gam">complete vignette</a>.</p>
-<p>The dependencies of package <strong><code>hyper.gam</code></strong> are detailed in the <a href="https://rpubs.com/tingtingzhan/hyper_gam">complete vignette</a>.</p>
-<p>Package <strong><code>hyper.gam</code></strong> requires the <em>development versions</em> of the <strong><code>spatstat.*</code></strong> family of packages <span class="citation" data-cites="spatstat15 spatstat05">(Baddeley, Rubak, and Turner 2015; Baddeley and Turner 2005)</span>. Installation instructions are provided in the <a href="https://rpubs.com/tingtingzhan/groupedHyperframe">complete vignette</a> of package <strong><code>groupedHyperframe</code></strong> <span class="citation" data-cites="groupedHyperframe">(Zhan and Chervoneva 2025, v0.3.0)</span>, Section 4.1.</p>
-<h2 data-number="2.3" id="installation"><span class="header-section-number">2.3</span> Installation</h2>
-<p>Packages <strong><code>hyper.gam</code></strong> (v0.2.0) and <strong><code>groupedHyperframe</code></strong> (v0.3.0) can be installed using the following command.</p>
+<h2 data-number="1.2" id="enhancement-dependency"><span class="header-section-number">1.2</span> Enhancement &amp; Dependency</h2>
+<p>Package <strong><code>hyper.gam</code></strong> (v0.2.1) <code>Enhances</code> package <strong><code>mgcv</code></strong> <span class="citation" data-cites="mgcv">(Wood 2017, v1.9.4)</span>. Details are provided in the <a href="https://tingtingzhan.quarto.pub/groupedhyperframe/">book</a>, Section 7.1.</p>
+<p>The dependencies of package <strong><code>hyper.gam</code></strong> are detailed in the <a href="https://tingtingzhan.quarto.pub/groupedhyperframe/">book</a>, Section 7.1.</p>
+<p>Package <strong><code>hyper.gam</code></strong> requires the <em>development versions</em> of the <strong><code>spatstat.*</code></strong> family of packages <span class="citation" data-cites="spatstat15 spatstat05">(Baddeley, Rubak, and Turner 2015; Baddeley and Turner 2005)</span>. Installation instructions are provided in the <a href="https://tingtingzhan.quarto.pub/groupedhyperframe/">book</a>, Section 7.1.</p>
+<h2 data-number="1.3" id="installation"><span class="header-section-number">1.3</span> Installation</h2>
+<p>Packages <strong><code>hyper.gam</code></strong> (v0.2.1) and <strong><code>groupedHyperframe</code></strong> (v0.3.3.20260123) can be installed using the following command.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>utils<span class="sc">::</span><span class="fu">install.packages</span>(<span class="st">&#39;groupedHyperframe&#39;</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>utils<span class="sc">::</span><span class="fu">install.packages</span>(<span class="st">&#39;hyper.gam&#39;</span>)</span></code></pre></div>
 </div>
-<h2 data-number="2.4" id="getting-started"><span class="header-section-number">2.4</span> Getting Started</h2>
-<p>Examples in the <a href="https://rpubs.com/tingtingzhan/hyper_gam">complete vignette</a> require that the <code>search</code> path has</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(groupedHyperframe)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hyper.gam)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span></code></pre></div>
-</div>
-<h2 data-number="2.5" id="acknowledgement"><span class="header-section-number">2.5</span> Acknowledgement</h2>
-<p>This work is supported by National Institutes of Health, U.S. Department of Health and Human Services grants</p>
+<h1 data-number="2" id="acknowledgement"><span class="header-section-number">2</span> Acknowledgement</h1>
+<p>Most of this work was undertaken during Tingting Zhan’s leisure hours, with limited support from National Institutes of Health, U.S. Department of Health and Human Services grants</p>
 <ul>
 <li>R01CA222847 (<a href="https://orcid.org/0000-0002-9104-4505">I. Chervoneva</a>, <a href="https://orcid.org/0000-0001-9971-4844">T. Zhan</a>, and <a href="https://orcid.org/0000-0002-8778-261X">H. Rui</a>)</li>
 <li>R01CA253977 (H. Rui and I. Chervoneva).</li>
 </ul>
-<p>The authors thank</p>
+<p>The author thanks</p>
 <ul>
 <li><a href="https://orcid.org/0000-0003-3576-2892">Erjia Cui</a>’s contribution to function <code>hyper_gam()</code>.</li>
 </ul>
@@ -323,11 +309,11 @@ Baddeley, Adrian, and Rolf Turner. 2005. <span>“<span class="nocase">spatstat<
 <div id="ref-RStudio" class="csl-entry" role="listitem">
 Posit team. 2025. <em>RStudio: Integrated Development Environment for <span>R</span></em>. Boston, MA: Posit Software, PBC. <a href="https://posit.co/">https://posit.co/</a>.
 </div>
+<div id="ref-R" class="csl-entry" role="listitem">
+R Core Team. 2025. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
 <div id="ref-mgcv" class="csl-entry" role="listitem">
 Wood, S. N. 2017. <em>Generalized <span>A</span>dditive <span>M</span>odels: An Introduction with <span>R</span></em>. 2nd ed. Chapman; Hall/CRC.
-</div>
-<div id="ref-groupedHyperframe" class="csl-entry" role="listitem">
-Zhan, Tingting, and Inna Chervoneva. 2025. <em>groupedHyperframe: Grouped Hyper Data Frame: An Extension of Hyper Data Frame Object</em>. <a href="https://doi.org/10.32614/CRAN.package.groupedHyperframe">https://doi.org/10.32614/CRAN.package.groupedHyperframe</a>.
 </div>
 </div>
 

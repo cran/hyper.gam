@@ -142,10 +142,6 @@ hyper_gam <- function(
 
 
 
-
-
-
-#' @importFrom cli col_blue col_magenta
 augdata <- function(
     data, xname
 ) {

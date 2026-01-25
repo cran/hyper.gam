@@ -36,8 +36,11 @@
 #' @param qlim \link[base]{length}-2 \link[base]{double} \link[base]{vector},
 #' range on \eqn{q}-axis. Default is the range of \eqn{X} and \eqn{X^{\text{new}}} combined.
 #' 
-#' @param axis_col \link[base]{length}-3 \link[base]{character} \link[base]{vector},
-#' colors of the \eqn{(p,q,s)} axes
+# @param axis_col \link[base]{length}-3 \link[base]{character} \link[base]{vector},
+# colors of the \eqn{(p,q,s)} axes
+#' 
+# @param axis_title description \link[base]{length}-3 \link[base]{character} \link[base]{vector},
+# title of the \eqn{(p,q,s)} axes
 #' 
 #' @param beta_col \link[base]{character} scalar, color 
 #' of \eqn{\hat{\beta(p)}}
@@ -126,7 +129,7 @@
 #' 
 #' @keywords internal
 #' @importFrom mgcv predict.gam
-#' @importFrom plotly plot_ly add_paths add_surface layout
+#' @importFrom plotly plot_ly add_paths add_surface
 #' @importFrom stats asOneSidedFormula predict
 #' @export
 integrandSurface <- function(
@@ -140,7 +143,8 @@ integrandSurface <- function(
     n = 501L,
     newid = min(3L, .row_names_info(newdata, type = 2L)) |> seq_len(), 
     qlim = range(X[is.finite(X)], newX[is.finite(newX)]), # removing NA, NaN, Inf
-    axis_col = c('dodgerblue', 'deeppink', 'darkolivegreen'),
+    #axis_col = c('dodgerblue', 'deeppink', 'darkolivegreen'),
+    #axis_title = c('Probability (p)', 'Quantile (q)', 'Integrand (s)'),
     beta_col = 'purple',
     surface_col = 
       # c('lightyellow', 'lightpink') # nice
@@ -227,12 +231,12 @@ integrandSurface <- function(
       )
   }
   
-  p <- p |> 
-    layout(scene = list(
-      xaxis = list(title = 'Probability (p)', tickformat = '.0%', color = axis_col[1L]), 
-      yaxis = list(title = 'Quantile (q)', color = axis_col[2L]),
-      zaxis = list(title = 'Integrand (s)', color = axis_col[3L])
-    ))
+  #p <- p |> 
+    #layout(scene = list(
+    #  xaxis = list(title = axis_title[1L], tickformat = '.0%', color = axis_col[1L]), 
+    #  yaxis = list(title = axis_title[2L], color = axis_col[2L]),
+    #  zaxis = list(title = axis_title[3L], color = axis_col[3L])
+    #))
   
   if (!length(newid)) return(p)
   
