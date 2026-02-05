@@ -15,6 +15,7 @@ Users are encouraged to get started with the vignettes.
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://github.com/tingtingzhan/hyper.gam}
   \item \url{https://tingtingzhan.quarto.pub/groupedhyperframe/bioinformatics_btaf430.html}
 }
 
@@ -24,7 +25,6 @@ Useful links:
 
 Other contributors:
 \itemize{
-  \item Inna Chervoneva \email{Inna.Chervoneva@jefferson.edu} (\href{https://orcid.org/0000-0002-9104-4505}{ORCID}) [contributor]
   \item Erjia Cui \email{ecui@umn.edu} (\href{https://orcid.org/0000-0003-3576-2892}{ORCID}) [contributor]
 }
 

@@ -39,49 +39,42 @@ The complete vignette exceeds the file size limit allowed on [CRAN](https://cran
 
 ## Environment
 
-Package **`hyper.gam`** (v`r packageVersion('hyper.gam')`) requires R version 4.5.0 (released 2025-04-11) or higher ([macOS](https://cran.r-project.org/bin/macosx/), [Windows](https://cran.r-project.org/bin/windows/base/), [Linux](https://cran.r-project.org/bin/linux/)).
-
-An Integrated Development Environment (IDE), e.g., [RStudio](https://posit.co/download/rstudio-desktop/) [@RStudio] or [Positron](https://positron.posit.co/download.html), is not required, but highly recommended.
-
-
-```{r}
-#| code-fold: true
-#| code-summary: "Environment on author's computer"
-#| label: author-env
-Sys.info()[c('sysname', 'release', 'machine')]
-R.version
-```
-
-
-## Enhancement & Dependency
-
-Package **`hyper.gam`** (v`r packageVersion('hyper.gam')`) `Enhances` package **`mgcv`** [@mgcv, v`r packageVersion('mgcv')`]. Details are provided in the [book](https://tingtingzhan.quarto.pub/groupedhyperframe/), Section 7.1.
-
-
-The dependencies of package **`hyper.gam`** are detailed in the [book](https://tingtingzhan.quarto.pub/groupedhyperframe/), Section 7.1.
-
-
-Package **`hyper.gam`** requires the *development versions* of the **`spatstat.*`** family of packages [@spatstat15; @spatstat05]. Installation instructions are provided in the [book](https://tingtingzhan.quarto.pub/groupedhyperframe/), Section 7.1.
-
-
+Package **`hyper.gam`** (v`r packageVersion('hyper.gam')`) requires R version 4.5.0 (released 2025-04-11) or higher. Details are provided in the [book chapter](https://tingtingzhan.quarto.pub/groupedhyperframe/appendix/about.html#sec-envir).
 
 ## Installation
 
-Packages **`hyper.gam`** (v`r packageVersion('hyper.gam')`) and **`groupedHyperframe`** (v`r packageVersion('groupedHyperframe')`) can be installed using the following command.
+Packages **`hyper.gam`** (v`r packageVersion('hyper.gam')`) can be installed using the following command in R.
 
 ```{r}
 #| eval: false
-utils::install.packages('groupedHyperframe')
 utils::install.packages('hyper.gam')
 ```
 
 
+## Enhancement 
+
+Package **`hyper.gam`** (v`r packageVersion('hyper.gam')`) `Enhances` package **`mgcv`** [@mgcv, v`r packageVersion('mgcv')`]. Details are provided in the [book chapter](https://tingtingzhan.quarto.pub/groupedhyperframe/appendix/about.html#hyper.gam).
+
+## Dependency
+
+The dependencies of package **`hyper.gam`** are detailed in the [book chapter](https://tingtingzhan.quarto.pub/groupedhyperframe/appendix/about.html#hyper.gam-1).
+
+
+Package **`hyper.gam`** requires the *development versions* of the **`spatstat.*`** family of packages [@spatstat15; @spatstat05]. Installation instructions are provided in the [book chapter](https://tingtingzhan.quarto.pub/groupedhyperframe/appendix/dev.html).
+
+
+
+
 # Acknowledgement
+
+<!-- 
 
 Most of this work was undertaken during Tingting Zhan’s leisure hours, with limited support from National Institutes of Health, U.S. Department of Health and Human Services grants
 
 -   R01CA222847 ([I. Chervoneva](https://orcid.org/0000-0002-9104-4505), [T. Zhan](https://orcid.org/0000-0001-9971-4844), and [H. Rui](https://orcid.org/0000-0002-8778-261X))
 -   R01CA253977 (H. Rui and I. Chervoneva).
+
+--> 
 
 The author thanks
 

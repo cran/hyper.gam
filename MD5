@@ -1,4 +1,4 @@
-5c8020b0e37ed8c35f324efc2c5c7e47 *DESCRIPTION
+2ae8332db4374fdb9457ef90e8d662d8 *DESCRIPTION
 951c30a97fee7b6e6bb31dad50ef45e6 *NAMESPACE
 face7f42e3d63dac7c4c78c52f8a0643 *R/0PACKAGE.R
 aa8d0baaad96f8f03a827f81f3c66c84 *R/cor_xy.R
@@ -14,14 +14,13 @@ e22fc8ad2cdd09fff3616b73501c99c6 *R/predict.hyper_gam.R
 0bffa88dfd56b0745213f72719e1c205 *R/update.R
 76e123f5dcc8dee07678412adc0a2a84 *build/partial.rdb
 08f0498c0d6e71e8989384d7524af3b4 *build/vignette.rds
-cccf93e5885efda4a9d389267abf3f54 *inst/CITATION
 6a085c127464f2fc726a358863af97fd *inst/WORDLIST
-9186532ce44611548929f1e63e5a1978 *inst/doc/intro.R
-cf5085380cd86b3c7c5f9f46b17454fb *inst/doc/intro.html
-f6a434c4aaf9392ba603d45086731a1d *inst/doc/intro.qmd
+6c3688abc4d94d29582bd4a0a9d594eb *inst/doc/intro.R
+810798de575a1a13fa11adb4396d7e73 *inst/doc/intro.html
+e8ea901d4d5a2b0796a5c673ee4d2b0d *inst/doc/intro.qmd
 69bea470040eef3e71eab51bdc13997f *man/cor_xy.Rd
 5008d2f4d2c054212456ca4041ac68d1 *man/getData.gam.Rd
-5e58d41eefdfba449f17adfb03e550bc *man/hyper.gam-package.Rd
+366207f01d166fd3261f24e23282e250 *man/hyper.gam-package.Rd
 c8a66b46d848db990e8d8ce57e112b7f *man/hyper_gam.Rd
 e946778f2e5fa4900542c9d510728ed5 *man/hyper_gam_graphics.Rd
 b18e794c4d35cf21b96ecdfc4d14a631 *man/integrandSurface.Rd
@@ -31,4 +30,4 @@ e21660aa0dc07f889543b0887b846cb3 *man/predict.hyper_gam.Rd
 3e16dcc5c93b701ba46a84a120bebb75 *man/sign_adjust.Rd
 f7d6e17411ca9f5fcad04d9db8f8652c *man/update.hyper_gam.Rd
 bdd52a514252aebbb01e817041ac5f2e *vignettes/hypergam.bib
-f6a434c4aaf9392ba603d45086731a1d *vignettes/intro.qmd
+e8ea901d4d5a2b0796a5c673ee4d2b0d *vignettes/intro.qmd
