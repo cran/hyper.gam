@@ -14,13 +14,13 @@ scale_do(x, center, scale)
 \item{scale}{\link[base]{function}}
 }
 \value{
-Function \code{\link[=scale_do]{scale_do()}} returns a \link[base]{numeric} \link[base]{vector} of the same length as \code{x}.
+The function \code{\link[=scale_do]{scale_do()}} returns a \link[base]{numeric} \link[base]{vector} of the same length as \code{x}.
 }
 \description{
 Alternative \link[base]{scale} using \link[stats]{median}, \link[stats]{IQR} and \link[stats]{mad}.
 }
 \details{
-Function \code{\link[=scale_do]{scale_do()}} performs scaling according to user-specified
+The function \code{\link[=scale_do]{scale_do()}} performs scaling according to user-specified
 definition of \code{center} and \code{scale}.
 }
 \examples{

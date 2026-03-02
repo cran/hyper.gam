@@ -12,7 +12,7 @@
 \item{...}{additional parameters, currently not in use}
 }
 \value{
-Function \code{\link[=update.hyper_gam]{update.hyper_gam()}} returns a \link{hyper_gam} model
+The \code{S3} method \code{\link[=update.hyper_gam]{update.hyper_gam()}} returns a \link{hyper_gam} model
 }
 \description{
 \link[stats]{update} a \link{hyper_gam} model

@@ -34,14 +34,14 @@ Default \code{FALSE}}
 most importantly \code{k}}
 }
 \value{
-Function \code{\link[=hyper_gam]{hyper_gam()}} returns a \link{hyper_gam} object,
+The function \code{\link[=hyper_gam]{hyper_gam()}} returns a \link{hyper_gam} object,
 which \link[base]{inherits} from class \link[mgcv]{gam}.
 }
 \description{
 A generalized additive model \link[mgcv]{gam} with one-and-only-one \link[base]{matrix} predictor.
 }
 \details{
-Function \code{\link[=hyper_gam]{hyper_gam()}} fits a \link[mgcv]{gam} model
+The function \code{\link[=hyper_gam]{hyper_gam()}} fits a \link[mgcv]{gam} model
 of response \eqn{y} with matrix predictor \eqn{X}.
 This method was originally defined in the context of \link[stats]{quantile}.
 In the following text, the matrix predictor \eqn{X} is denoted as \eqn{Q(p)},

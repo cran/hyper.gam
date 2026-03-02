@@ -18,7 +18,7 @@ cor_xy(object, ...)
 taking values between 0 and 1, see function \link[stats]{quantile}.}
 }
 \value{
-Function \code{\link[=cor_xy.hyper_gam]{cor_xy.hyper_gam()}} returns a \link[base]{numeric} scalar or \link[base]{vector} of
+The \code{S3} method \code{\link[=cor_xy.hyper_gam]{cor_xy.hyper_gam()}} returns a \link[base]{numeric} scalar or \link[base]{vector} of
 \link[stats]{cor}relation(s).
 }
 \description{

@@ -11,11 +11,11 @@
 #' @param scale \link[base]{function}
 #' 
 #' @details
-#' Function [scale_do()] performs scaling according to user-specified
+#' The function [scale_do()] performs scaling according to user-specified
 #' definition of `center` and `scale`. 
 #' 
 #' @return 
-#' Function [scale_do()] returns a \link[base]{numeric} \link[base]{vector} of the same length as `x`.
+#' The function [scale_do()] returns a \link[base]{numeric} \link[base]{vector} of the same length as `x`.
 #' 
 #' @examples
 #' set.seed(1315); x = rnorm(20)

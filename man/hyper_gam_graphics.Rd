@@ -39,11 +39,11 @@ default \code{501L}. See parameter \code{n.grid} of function \link[mgcv]{vis.gam
 \item{image_col}{argument \code{col} of \link[graphics]{image.default}}
 }
 \value{
-Function \code{\link[=persp.hyper_gam]{persp.hyper_gam()}},
+The \code{S3} method \code{\link[=persp.hyper_gam]{persp.hyper_gam()}},
 a method dispatch of S3 generic \link[graphics]{persp},
 does not have a return value.
 
-Function \code{\link[=contour.hyper_gam]{contour.hyper_gam()}},
+The \code{S3} method \code{\link[=contour.hyper_gam]{contour.hyper_gam()}},
 a method dispatch of S3 generic \link[graphics]{contour},
 does not have a return value
 }

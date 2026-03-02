@@ -22,7 +22,7 @@
 #' 
 #' @details 
 #' 
-#' Function [predict.hyper_gam()] computes 
+#' The `S3` method [predict.hyper_gam()] computes 
 #' the sign-adjusted \link[mgcv]{gam} model prediction.
 #' The sign-adjustment ensures
 #' that the return
@@ -30,12 +30,11 @@
 #' at the selected tabulating grid.
 #' 
 #' @returns 
-#' Function [predict.hyper_gam()] returns a 
+#' The `S3` method [predict.hyper_gam()] returns a 
 #' \link[base]{double} \link[base]{vector}.
 #' 
 #' @keywords internal
 #' @importFrom mgcv predict.gam
-#' @importFrom stats predict
 #' @export predict.hyper_gam
 #' @export
 predict.hyper_gam <- function(

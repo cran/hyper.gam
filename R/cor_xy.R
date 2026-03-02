@@ -32,11 +32,10 @@ cor_xy <- function(object, ...) UseMethod(generic = 'cor_xy')
 # are positively correlated with the user-selected \eqn{X_{\cdot,j}}.
 #' 
 #' @returns
-#' Function [cor_xy.hyper_gam()] returns a \link[base]{numeric} scalar or \link[base]{vector} of 
+#' The `S3` method [cor_xy.hyper_gam()] returns a \link[base]{numeric} scalar or \link[base]{vector} of 
 #' \link[stats]{cor}relation(s).
 #' 
 #' @keywords internal
-#' @importFrom stats cor quantile
 #' @export cor_xy.hyper_gam
 #' @export
 cor_xy.hyper_gam <- function(object, probs = .5, ...) { # parameter `xfom` removed

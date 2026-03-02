@@ -1,10 +1,11 @@
 
-#' @note
-#' Help files of individual functions are intentionally suppressed in the `pdf` manual.
-#' Users are encouraged to get started with the vignettes.
+#' @keywords internal
+#' @import groupedHyperframe
 #' 
 #' @import cli
-#' @import groupedHyperframe
+#' 
+#' @import stats
+#' 
 '_PACKAGE'
 
 

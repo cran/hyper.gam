@@ -29,14 +29,14 @@ the \link[base]{sign} of \code{\link[=cor_xy]{cor_xy()}} return, to be used in t
 \item{...}{additional parameters, currently not in use.}
 }
 \value{
-Function \code{\link[=predict.hyper_gam]{predict.hyper_gam()}} returns a
+The \code{S3} method \code{\link[=predict.hyper_gam]{predict.hyper_gam()}} returns a
 \link[base]{double} \link[base]{vector}.
 }
 \description{
 Prediction of \link{hyper_gam} model.
 }
 \details{
-Function \code{\link[=predict.hyper_gam]{predict.hyper_gam()}} computes
+The \code{S3} method \code{\link[=predict.hyper_gam]{predict.hyper_gam()}} computes
 the sign-adjusted \link[mgcv]{gam} model prediction.
 The sign-adjustment ensures
 that the return

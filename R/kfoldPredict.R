@@ -22,7 +22,7 @@
 #' @param ... additional parameters, currently not in use
 #' 
 #' @returns 
-#' Function [kfoldPredict.hyper_gam()] returns a \link[base]{numeric} \link[base]{vector}, 
+#' The (pseudo) `S3` method [kfoldPredict.hyper_gam()] returns a \link[base]{numeric} \link[base]{vector}, 
 #' with \link[base]{attributes} for savvy developers
 #' \describe{
 #' \item{`attr(.,'fold')`}{\link[base]{integer} \link[base]{vector}, indices of the \eqn{i}-th fold}
@@ -47,7 +47,7 @@ kfoldPredict.hyper_gam <- function(
   data <- getData.gam(object)
   
   # ?caret::createFolds depends on ?base::set.seed
-  nr <- .row_names_info(data, type = 2L)
+  nr <- nrow(data)
   fld <- createFolds(y = seq_len(nr), k = k, list = TRUE, returnTrain = FALSE)
   
   sgn <- rep(NA_integer_, times = k)

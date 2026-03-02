@@ -23,7 +23,7 @@
 #' @param ... additional parameters, currently not in use
 #' 
 #' @returns
-#' Function [persp.hyper_gam()], 
+#' The `S3` method [persp.hyper_gam()], 
 #' a method dispatch of S3 generic \link[graphics]{persp},
 #' does not have a return value.
 #' 
@@ -55,12 +55,12 @@ persp.hyper_gam <- function(
 
 
 
+#' @rdname hyper_gam_graphics
 #' @returns
-#' Function [contour.hyper_gam()],
+#' The `S3` method [contour.hyper_gam()],
 #' a method dispatch of S3 generic \link[graphics]{contour},
 #' does not have a return value
 #' 
-#' @rdname hyper_gam_graphics
 #' @importFrom graphics contour contour.default image.default
 #' @importFrom grDevices topo.colors
 #' @export contour.hyper_gam

@@ -15,7 +15,7 @@ sign_adjust(object, ...)
 \item{...}{parameters of function \code{\link[=cor_xy.hyper_gam]{cor_xy.hyper_gam()}}}
 }
 \value{
-Function \code{\link[=sign_adjust.hyper_gam]{sign_adjust.hyper_gam()}} returns a \link[base]{numeric} \link[base]{vector}.
+The \code{S3} method \code{\link[=sign_adjust.hyper_gam]{sign_adjust.hyper_gam()}} returns a \link[base]{numeric} \link[base]{vector}.
 }
 \description{
 Sign Adjustment

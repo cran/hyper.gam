@@ -33,7 +33,7 @@
 #' most importantly `k`
 #' 
 #' @details
-#' Function [hyper_gam()] fits a \link[mgcv]{gam} model
+#' The function [hyper_gam()] fits a \link[mgcv]{gam} model
 #' of response \eqn{y} with matrix predictor \eqn{X}.
 #' This method was originally defined in the context of \link[stats]{quantile}.
 #' In the following text, the matrix predictor \eqn{X} is denoted as \eqn{Q(p)},
@@ -54,7 +54,7 @@
 #' 
 #' 
 #' @returns 
-#' Function [hyper_gam()] returns a [hyper_gam] object, 
+#' The function [hyper_gam()] returns a [hyper_gam] object, 
 #' which \link[base]{inherits} from class \link[mgcv]{gam}.
 #' 
 #' @author 
@@ -75,7 +75,6 @@
 #' 
 #' @keywords internal
 #' @importFrom mgcv gam cox.ph s ti
-#' @importFrom stats binomial gaussian
 #' @export
 hyper_gam <- function(
     formula, data,

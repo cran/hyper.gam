@@ -101,7 +101,7 @@
 #' 
 #' 
 #' @returns 
-#' Function [integrandSurface()] returns a pretty \CRANpkg{htmlwidgets} created by **R** package \CRANpkg{plotly}
+#' The function [integrandSurface()] returns a pretty \CRANpkg{htmlwidgets} created by **R** package \CRANpkg{plotly}
 #' to showcase the \link[graphics]{persp}ective plot of the
 #' estimated sign-adjusted integrand surface \eqn{\hat{S}(p,q)}.
 #' 
@@ -130,7 +130,6 @@
 #' @keywords internal
 #' @importFrom mgcv predict.gam
 #' @importFrom plotly plot_ly add_paths add_surface
-#' @importFrom stats asOneSidedFormula predict
 #' @export
 integrandSurface <- function(
     ...,
@@ -141,7 +140,7 @@ integrandSurface <- function(
     proj_xz = TRUE,
     proj_beta = FALSE, # bug with my latest hyperframe !!!
     n = 501L,
-    newid = min(3L, .row_names_info(newdata, type = 2L)) |> seq_len(), 
+    newid = min(3L, nrow(newdata)) |> seq_len(), 
     qlim = range(X[is.finite(X)], newX[is.finite(newX)]), # removing NA, NaN, Inf
     #axis_col = c('dodgerblue', 'deeppink', 'darkolivegreen'),
     #axis_title = c('Probability (p)', 'Quantile (q)', 'Integrand (s)'),

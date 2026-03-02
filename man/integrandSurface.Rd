@@ -12,7 +12,7 @@ integrandSurface(
   proj_xz = TRUE,
   proj_beta = FALSE,
   n = 501L,
-  newid = seq_len(min(3L, .row_names_info(newdata, type = 2L))),
+  newid = seq_len(min(3L, nrow(newdata))),
   qlim = range(X[is.finite(X)], newX[is.finite(newX)]),
   beta_col = "purple",
   surface_col = c("white", "lightgreen")
@@ -55,7 +55,7 @@ of \eqn{\hat{\beta(p)}}}
 color of the integrand surface(s), for lowest and highest surface values}
 }
 \value{
-Function \code{\link[=integrandSurface]{integrandSurface()}} returns a pretty \CRANpkg{htmlwidgets} created by \strong{R} package \CRANpkg{plotly}
+The function \code{\link[=integrandSurface]{integrandSurface()}} returns a pretty \CRANpkg{htmlwidgets} created by \strong{R} package \CRANpkg{plotly}
 to showcase the \link[graphics]{persp}ective plot of the
 estimated sign-adjusted integrand surface \eqn{\hat{S}(p,q)}.
 

@@ -16,7 +16,7 @@ kfoldPredict.hyper_gam(object, k, mc.cores = getOption("mc.cores"), ...)
 \item{...}{additional parameters, currently not in use}
 }
 \value{
-Function \code{\link[=kfoldPredict.hyper_gam]{kfoldPredict.hyper_gam()}} returns a \link[base]{numeric} \link[base]{vector},
+The (pseudo) \code{S3} method \code{\link[=kfoldPredict.hyper_gam]{kfoldPredict.hyper_gam()}} returns a \link[base]{numeric} \link[base]{vector},
 with \link[base]{attributes} for savvy developers
 \describe{
 \item{\code{attr(.,'fold')}}{\link[base]{integer} \link[base]{vector}, indices of the \eqn{i}-th fold}
