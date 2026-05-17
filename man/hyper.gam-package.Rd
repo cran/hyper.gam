@@ -6,23 +6,27 @@
 \alias{hyper.gam-package}
 \title{hyper.gam: Generalized Additive Models with Hyper Column}
 \description{
-Generalized additive models with a numeric hyper column. Sign-adjustment based on the correlation of model prediction and a selected slice of the hyper column. Visualization of the integrand surface over the hyper column.
+An interactive HTML widget of the perspective plot for generalized additive models. An alternative solution of the function mgcv::vis.gam().
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/tingtingzhan/hyper.gam}
-  \item \url{https://tingtingzhan.quarto.pub/groupedhyperframe/bioinformatics_btaf430.html}
-  \item \url{https://tingtingzhan-groupedhyperframe.netlify.app/bioinformatics_btaf430.html}
+  \item \url{https://tingtingzhan-btaf430.netlify.app}
 }
 
 }
 \author{
 \strong{Maintainer}: Tingting Zhan \email{tingtingzhan@gmail.com} (\href{https://orcid.org/0000-0001-9971-4844}{ORCID})
 
+Authors:
+\itemize{
+  \item Tingting Zhan \email{tingtingzhan@gmail.com} (\href{https://orcid.org/0000-0001-9971-4844}{ORCID})
+}
+
 Other contributors:
 \itemize{
-  \item Erjia Cui \email{ecui@umn.edu} (\href{https://orcid.org/0000-0003-3576-2892}{ORCID}) [contributor]
+  \item Erjia Cui \email{ecui@umn.edu} (\href{https://orcid.org/0000-0003-3576-2892}{ORCID}) (up to v0.2.3) [contributor]
 }
 
 }
