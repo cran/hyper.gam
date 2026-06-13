@@ -35,8 +35,7 @@
 #' @param ylim \link[base]{length}-2 \link[base]{double} \link[base]{vector},
 #' range on \eqn{q}-axis. Default is the range of \eqn{X} and \eqn{X^{\text{new}}} combined.
 #' 
-#' @param surface_col \link[base]{length}-2 \link[base]{character} \link[base]{vector},
-#' color of the integrand surface(s), for lowest and highest surface values
+#' @param colorscale see function \link[plotly]{add_surface}
 #' 
 #' @returns 
 #' The function [widget_gam()] returns a pretty \CRANpkg{htmlwidgets} created by **R** package \CRANpkg{plotly}.
@@ -47,10 +46,8 @@
 #' 
 #' @examples
 #' library(mgcv)
-#' # ?gam
-#' set.seed(2)
-#' dat = gamSim(1, n = 400, dist = 'normal', scale = 2)
-#' gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
+#' # ?s
+#' # ?ti
 #' 
 #' @keywords internal
 #' @importFrom mgcv predict.gam
@@ -66,16 +63,7 @@ widget_gam <- function(
     n = 501L,
     newid = min(3L, nrow(newdata)) |> seq_len(), 
     ylim = range(X[is.finite(X)], newX[is.finite(newX)]), # removing NA, NaN, Inf
-    surface_col = 
-      # c('lightyellow', 'lightpink') # nice
-      # c('beige', 'lightpink') # nice
-      # c('white', 'deeppink') # not good!
-      # c('white', 'magenta') # not good!
-      c('white', 'lightgreen') # nice
-    # c('white', 'darkgreen') # not good!
-    # c('white', 'lightgoldenrod') # my R do not recognize
-    # c('white', 'lightslateblue') # my R do not recognize
-    # c('white', 'yellow') # nice
+    colorscale
 ) {
   
   dots <- list(...)
@@ -142,7 +130,7 @@ widget_gam <- function(
             project = list(z = TRUE)
           )
         ),
-        colorscale = list(c(0, 1), surface_col), 
+        colorscale = colorscale,
         showscale = FALSE
       )
   }

@@ -1,8 +1,8 @@
-ac9ca5c4b6dc9f7121899bd6fef92643 *DESCRIPTION
+395d78a528aab4bbda08a605a7f6880f *DESCRIPTION
 d1fb3e1f5ec6c50689a28fe570459959 *NAMESPACE
 a7fd6a9d2c585642a0c37aa66414fa03 *R/0PACKAGE.R
-b39802d8335e34176a94544621d1ea9b *R/widget_gam.R
+c92d3e27e20b381c5183b43adc1d0cc6 *R/widget_gam.R
 6a085c127464f2fc726a358863af97fd *inst/WORDLIST
 463fc99ddb6e2ecb9945009ae6b46a9f *inst/extR/bib.R
-e4d19f8926cd75726ab0d3389d4b5b62 *man/hyper.gam-package.Rd
-da8a485111b6fcb8e6108ad5f436ca72 *man/widget_gam.Rd
+507d0976ac7116cf98e24180825c6097 *man/hyper.gam-package.Rd
+2af06108572427b6b47d5261e71377ff *man/widget_gam.Rd
