@@ -6,7 +6,18 @@
 \alias{hyper.gam-package}
 \title{hyper.gam: Generalized Additive Models with Hyper Column}
 \description{
-An interactive HTML widget of the perspective plot for generalized additive models. An alternative solution of the function mgcv::vis.gam(). The author has retired from academic research. Accordingly, this package should not be considered a validated tool for use in peer-reviewed publications or as the basis for grant applications.
+An interactive HTML widget of the perspective plot for generalized additive models. An alternative solution of the function mgcv::vis.gam(). This R package author has retired from academic research. Accordingly, this package should not be considered a validated tool for use in peer-reviewed publications or as the basis for grant applications. Backward compatibility with user-code published in \doi{10.1093/bioinformatics/btaf182} and \doi{10.1093/bioinformatics/btaf430} is not maintained in versions >= 0.3.0 of this package. The authors of those publications are the appropriate contacts for reproducibility inquiries.
+}
+\note{
+This R package author has retired from academic research.
+
+Accordingly, this package should not be considered a validated tool for use in peer-reviewed publications or as the basis for grant applications.
+
+Backward compatibility with user-code published in the following publications is not maintained in versions \verb{>= 0.3.0} of this package. The authors of those publications are the appropriate contacts for reproducibility inquiries.
+
+\doi{10.1093/bioinformatics/btaf182}
+
+\doi{10.1093/bioinformatics/btaf430}
 }
 \seealso{
 Useful links:
@@ -30,4 +41,3 @@ Other contributors:
 }
 
 }
-\keyword{internal}

@@ -1,9 +1,9 @@
 Package: hyper.gam
 Type: Package
 Title: Generalized Additive Models with Hyper Column
-Version: 0.3.1
-Date: 2026-06-13
-Description: An interactive HTML widget of the perspective plot for generalized additive models.  An alternative solution of the function mgcv::vis.gam().  The author has retired from academic research. Accordingly, this package should not be considered a validated tool for use in peer-reviewed publications or as the basis for grant applications.
+Version: 0.3.2
+Date: 2026-06-20
+Description: An interactive HTML widget of the perspective plot for generalized additive models.  An alternative solution of the function mgcv::vis.gam().  This R package author has retired from academic research. Accordingly, this package should not be considered a validated tool for use in peer-reviewed publications or as the basis for grant applications.  Backward compatibility with user-code published in <doi:10.1093/bioinformatics/btaf182> and <doi:10.1093/bioinformatics/btaf430> is not maintained in versions >= 0.3.0 of this package. The authors of those publications are the appropriate contacts for reproducibility inquiries. 
 Encoding: UTF-8
 License: GPL-2
 Language: en-US
@@ -20,11 +20,11 @@ Suggests: htmlwidgets
 Config/roxygen2/version: 8.0.0
 Config/roxygen2/markdown: TRUE
 NeedsCompilation: no
-Packaged: 2026-06-13 22:30:08 UTC; tingtingzhan
+Packaged: 2026-06-18 21:17:41 UTC; tingtingzhan
 Author: Tingting Zhan [aut, cre] (ORCID:
     <https://orcid.org/0000-0001-9971-4844>),
   Erjia Cui [ctb] (ORCID: <https://orcid.org/0000-0003-3576-2892>, up to
     v0.2.3)
 Maintainer: Tingting Zhan <tingtingzhan@gmail.com>
 Repository: CRAN
-Date/Publication: 2026-06-13 22:40:02 UTC
+Date/Publication: 2026-06-19 15:50:14 UTC
