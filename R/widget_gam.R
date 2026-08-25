@@ -1,246 +1,347 @@
 
-# read ?mgcv::vis.gam carefully
-# why ?mgcv::vis.gam does not require (an equivalent of) the parameter `formula`
 
-
-#' @title Alternative of \link[mgcv]{vis.gam}
+#' @title Alternative \link[graphics]{persp}ective Plot for \link[mgcv]{gam} Model
 #' 
 #' @description
-#' An interactive \CRANpkg{htmlwidgets} of the 
-#' \link[graphics]{persp}ective plot for 
-#' \link[mgcv]{gam} model(s)
+#' An interactive \link[graphics]{persp}ective plot for 
+#' \link[mgcv]{gam} model, 
+#' rendered as an \CRANpkg{htmlwidgets} 
 #' using the package \CRANpkg{plotly}.
 #' 
-#' @param ... one or more \link[mgcv]{gam} models
-#' based on *a same data set*.
+#' @param x a \link[mgcv]{gam} model
 #' 
-#' @param formula one-sided \link[stats]{formula}
+#' @param ... parameters of the function \link[mgcv]{vis.gam}
 #' 
-#' @param newdata (for future expansion)
-#' 
-#' @param proj_xy \link[base]{logical} scalar, whether to show 
-#' the projection to the \eqn{(x,y)}-plain, default value is `TRUE`
-#' 
-#' @param proj_xz \link[base]{logical} scalar, whether to show
-#' the projection to the \eqn{(x,z)}-plain, default value is `TRUE`
-#' 
-#' @param n \link[base]{integer} scalar, fineness of visualization,
-#' default value is `501L`. See parameter `n.grid` of the function \link[mgcv]{vis.gam}.
-#' 
-#' @param newid \link[base]{integer} scalar or \link[base]{vector},
-#' row indices of `newdata` to be visualized. 
-#' Default `1:2`, i.e., the first two test subjects.
-#' Use `newid = NULL` to disable the visualization of `newdata`.
-#' 
-#' @param ylim \link[base]{length}-2 \link[base]{double} \link[base]{vector},
-#' range on \eqn{q}-axis. Default is the range of \eqn{X} and \eqn{X^{\text{new}}} combined.
-#' 
-#' @param colorscale see function \link[plotly]{add_surface}
+#' @param colorscale to be passed into the function \link[plotly]{add_surface}
 #' 
 #' @returns 
 #' The function [widget_gam()] returns a pretty \CRANpkg{htmlwidgets} created by **R** package \CRANpkg{plotly}.
 #' 
 #' @note
-#' The maintainer is not aware of any functionality of projection of arbitrary curves in package \CRANpkg{plotly}.
-#' Currently, the projections are hard coded.
+#' 
+#' The internal utility functions `persp_gam_int()` and `newd_gam_int()` are based on the function \link[mgcv]{vis.gam}.
 #' 
 #' @examples
 #' library(mgcv)
-#' # ?s
-#' # ?ti
+#' colorscale = list(c(0, 1), c('white', 'lightgreen'))
 #' 
-#' @keywords internal
-#' @importFrom mgcv predict.gam
-#' @importFrom plotly plot_ly add_paths add_surface
-#' @importFrom stats setNames
+#' # examples from ?mgcv::te
+#' test1 = \(x,z,sx=0.3,sz=0.4) { 
+#'  x = x*20
+#'  (pi**sx*sz)*(1.2*exp(-(x-0.2)^2/sx^2-(z-0.3)^2/sz^2)+
+#'   0.8*exp(-(x-0.7)^2/sx^2-(z-0.8)^2/sz^2))
+#' }
+#' n = 500
+#' x = runif(n)/20; z = runif(n);
+#' xs = seq(0,1,length=30)/20; zs = seq(0,1,length=30)
+#' pr = data.frame(x=rep(xs,30),z=rep(zs,rep(30,30)))
+#' truth = matrix(test1(pr$x,pr$z),30,30)
+#' persp(xs,zs,truth); title("truth")
+#' f = test1(x,z)
+#' y = f + rnorm(n)*0.2
+#' b1 = gam(y ~ s(x,z))
+#' b2 = gam(y ~ te(x,z))
+#' b3 = gam(y ~ ti(x) + ti(z) + ti(x,z))
+#' b4 = gam(y ~ ti(x) + ti(x,z,mc=c(0,1))) ## note z constrained!
+#' \donttest{
+#' widget_gam(b1, colorscale = colorscale)
+#' widget_gam(b2, colorscale = colorscale)
+#' widget_gam(b3, colorscale = colorscale)
+#' widget_gam(b4, colorscale = colorscale)
+#' }
+#' @importFrom plotly plot_ly add_surface layout
 #' @export
-widget_gam <- function(
-    ...,
-    formula, 
-    newdata = data,
-    proj_xy = TRUE, 
-    proj_xz = TRUE,
-    n = 501L,
-    newid = min(3L, nrow(newdata)) |> seq_len(), 
-    ylim = range(X[is.finite(X)], newX[is.finite(newX)]), # removing NA, NaN, Inf
-    colorscale
-) {
+widget_gam <- function(x, ..., colorscale) {
   
-  dots <- list(...)
-  if (!all(vapply(dots, FUN = inherits, what = 'gam', FUN.VALUE = NA))) stop('all input needs to be `gam.matrix`')
+  p_ <- persp_gam_int(x, ...)
   
-  if (!is.call(formula) || formula[[1L]] != '~' || length(formula) != 2L) stop('`formula` must be one-sided formula')
-  xnm <- formula[[2L]] # right-hand-side
-  if (!is.symbol(xnm)) stop('Right-hand-side ', xnm |> deparse1() |> col_magenta(), ' must be a symbol')
+  ret <- plot_ly() |> 
+    add_surface(
+      x = p_$m1, y = p_$m2,
+      z = t.default(p_$z), # plot_ly(, type = 'surface') lay out `z` differently from ?graphics::persp !!!
+      cmin = p_$min.z, cmax = p_$max.z, 
+      contours = list(
+        z = list(
+          show = TRUE,
+          start = p_$min.z, end = p_$max.z, size = (p_$max.z - p_$min.z)/21,
+          usecolormap = TRUE,
+          highlightcolor = "#ff0000",
+          project = list(z = TRUE)
+        )
+      ),
+      colorscale = colorscale,
+      showscale = FALSE
+    )
   
-  data_ <- dots |> lapply(FUN = \(i) i$data) |> unique()
-  if (length(data_) > 1L) stop('data not same')
-  data <- data_[[1L]]
-  
-  X <- data[[paste(xnm, 'y', sep = '.')]]
-  x. <- as.double(colnames(X))
-  nx <- length(x.)
-  
-  newX <- newdata[[paste(xnm, 'y', sep = '.')]]
-  if (!is.matrix(newX)) stop('`newdata` does not contain a matrix column of functional predictor values')
-  newx. <- newX |> colnames() |> as.double()
-  if (!all.equal.numeric(newx., x.)) stop('grid of training and test data must be exactly the same')
-  
-  #l <- unique.default(data$L)
-  l <- unique.default(data[[paste(xnm, 'L', sep = '.')]])
-  if (length(l) != 1L) stop('wont happen')
-  
-  # plot!!
-  # *surface* based on training model
-  x_ <- seq.int(from = min(x.), to = max(x.), length.out = n)
-  y_ <- seq.int(from = ylim[1L], to = ylim[2L], length.out = n)
-  d_xy <- data.frame(
-    expand.grid(x = x_, y_), # span `x_` first, then span `y_`
-    L = l
-  ) |> 
-    setNames(nm = c(
-      paste(xnm, 'x', sep = '.'),
-      paste(xnm, 'y', sep = '.'),
-      paste(xnm, 'L', sep = '.')
-    ))
-  
-  zs <- mapply(FUN = \(x) { # (x = dots[[1L]])
-    y0 <- predict.gam(x, newdata = d_xy, se.fit = FALSE, type = 'link')
-    dim(y0) <- c(n, n)
-    t.default(y0) # important!!!
-    # plot_ly(, type = 'surface') lay out `z` differently from ?graphics::persp !!!
-  }, x = dots, SIMPLIFY = FALSE)
-  
-  zmin <- zs |> unlist() |> min()
-  zmax <- zs |> unlist() |> max()
-  
-  p <- plot_ly()
-  
-  for (z_ in zs) {
-    p <- p |> 
+  if (length(p_$lo.z)) {
+    ret <- ret |>
       add_surface(
-        x = x_, y = y_,
-        z = z_, cmin = zmin, cmax = zmax, 
-        contours = list(
-          z = list(
-            show = TRUE,
-            start = zmin, end = zmax, size = (zmax - zmin)/21,
-            usecolormap = TRUE,
-            highlightcolor = "#ff0000",
-            project = list(z = TRUE)
-          )
-        ),
+        x = p_$m1, y = p_$m2,
+        z = t.default(p_$lo.z), # plot_ly(, type = 'surface') lay out `z` differently from ?graphics::persp !!!
+        cmin = p_$min.z, cmax = p_$max.z,
+        opacity = .3, 
         colorscale = colorscale,
         showscale = FALSE
       )
   }
   
-  if (!length(newid)) return(p)
-  
-  if (!is.integer(newid) || anyNA(newid) || any(newid > nrow(newX))) stop('illegal `newid`')
-  
-  d <- data.frame(
-    x = x.,
-    y = newX[newid, , drop = FALSE] |> t.default() |> c(),
-    id = rep(newid, each = nx),
-    L = l
-  )
-  if (proj_xy) {
-    p <- p |> 
-      add_paths(
-        x = d$x, y = d$y, z = zmin, name = d$id, color = d$id, 
-        showlegend = FALSE,
-        line = list(width = 4)
-      )
-  } # projection on x-y plain
-  
-  d_ <- d |>
-    setNames(nm = c(
-      paste(xnm, 'x', sep = '.'),
-      paste(xnm, 'y', sep = '.'),
-      'id',
-      paste(xnm, 'L', sep = '.')
-    ))
-  z_subj <- mapply(FUN = \(x) {
-    predict.gam(x, newdata = d_, se.fit = FALSE, type = 'link')
-  }, x = dots, SIMPLIFY = FALSE)
-  
-  if (proj_xz) {
-    # projection on x-z plain, F(p, Q(p)) curve
-    # this is only done if (length(dots) == 1L); otherwise too messy
-    if (length(dots) == 1L) {
-      for (i in seq_along(dots)) {
-        p <- p |> 
-          add_paths(
-            x = d$x, y = ylim[2L], z = z_subj[[i]], name = d$id, color = d$id,
-            showlegend = FALSE,
-            line = list(width = 4)
-          )
-      }
-    }
-  } # projection on x-z plain
-  
-  for (i in seq_along(dots)) {
-    p <- p |> 
-      add_paths(
-        x = d$x, y = d$y, z = z_subj[[i]], name = d$id, color = d$id,
-        showlegend = FALSE,
-        line = list(width = 4)
+  if (length(p_$hi.z)) {
+    ret <- ret |>
+      add_surface(
+        x = p_$m1, y = p_$m2,
+        z = t.default(p_$hi.z), # plot_ly(, type = 'surface') lay out `z` differently from ?graphics::persp !!!
+        cmin = p_$min.z, cmax = p_$max.z,
+        opacity = .3, 
+        colorscale = colorscale,
+        showscale = FALSE
       )
   }
   
-  return(p)
+  ret |>
+    layout(scene = list(
+      xaxis = list(title = p_$xlab), 
+      yaxis = list(title = p_$ylab),
+      zaxis = list(title = p_$zlab)
+    ))
   
 }
 
 
-
-
-
-
-
-
-
-
-
-if (FALSE) { # learn projection with plotly
+#' @importFrom mgcv predict.gam
+persp_gam_int <- \(
+    x, 
+    view = NULL, 
+    se = -1, 
+    type = c('link', 'response'), 
+    zlim = NULL, 
+    lp = 1, 
+    ...
+) {
   
+  # re-written from ?mgcv::vis.gam
+  
+  type <- match.arg(type)
+  zlab <- switch(type, link = {
+    paste("linear predictor")
+  }, response = {
+    type
+  })
+
+  tmp <- newd_gam_int(x = x, view = view, lp = lp, ...)
+  newd <- tmp$newd
+  ex.tf <- tmp$ex.tf
+  m1 <- tmp$m1
+  m2 <- tmp$m2
+
+  fv <- predict.gam(x, newdata = newd, se.fit = TRUE, type = type)
+  z <- fv$fit
+  if (is.matrix(z)) {
+    lp <- min(ncol(z), max(1, round(lp)))
+    z <- z[, lp]
+    fv$fit <- fv$fit[, lp]
+    fv$se.fit <- fv$se.fit[, lp]
+  }
+  if (length(ex.tf)) {
+    fv$se.fit[ex.tf] <- fv$fit[ex.tf] <- NA
+  }
+
+  if (!is.null(zlim)) {
+    if (length(zlim) != 2 || zlim[1] >= zlim[2]) 
+      stop("Something wrong with zlim")
+    min.z <- zlim[1]
+    max.z <- zlim[2]
+  } else {
+    min.z <- min(fv$fit, na.rm = TRUE)
+    max.z <- max(fv$fit, na.rm = TRUE)
+  }
+  if (min.z == max.z) {
+    min.z <- min.z - 1
+    max.z <- max.z + 1
+  }
+
+  dm <- c(length(m1), length(m2))
+  # see inside [newd_gam_int()]: `m1` index first, `m2` next
+  
+  z <- fv$fit |>
+    array(dim = dm)
+   
+  ret <- list(
+    m1 = m1, m2 = m2, z = z,
+    min.z = min.z, max.z = max.z,
+    newd = newd,
+    xlab = view[1],
+    ylab = view[2],
+    zlab = zlab
+  )
     
-  # python
-  # https://plotly.com/python/3d-line-plots/ # no mention of projection
-  # https://community.plotly.com/t/how-to-plot-a-2d-graph-on-the-background-side-wall-of-a-3d-plot/72874/5
-  
-  # R
-  # https://plotly.com/r/3d-line-plots/ # no mention of projection
-  # https://stackoverflow.com/questions/53182432/3d-surface-with-a-2d-projection-using-r
-  
-  plot_ly(z = ~volcano) |> 
-    add_surface(
-      contours = list(
-        z = list(
-          show = TRUE,
-          usecolormap = TRUE,
-          highlightcolor = "#ff0000",
-          project = list(z=TRUE)
-        ),
-        y = list(
-          show = TRUE,
-          usecolormap = FALSE, # Projection without colormap
-          highlightcolor = "#ff0000",
-          project = list(y=TRUE)
-        ),
-        x = list(
-          show = TRUE,
-          usecolormap = TRUE,
-          highlightcolor = "#ff0000",
-          project = list(x=TRUE)
-        )
-      )
-    )
-  
-  # ?plotly::add_trace
-  # explanation for parameter `...`
-  # Arguments (i.e., attributes) passed along to the trace type. See schema() for a list of acceptable attributes for a given trace type (by going to traces -> type -> attributes).
-  
-  # ?plotly::schema
+  if (se > 0) {
+    
+    lo.z <- fv$fit - fv$se.fit * se
+    hi.z <- fv$fit + fv$se.fit * se
+    
+    ret$max.z <- max(hi.z, na.rm = TRUE)
+    ret$min.z <- min(lo.z, na.rm = TRUE)
+    
+    ret$lo.z <- lo.z |>
+      array(dim = dm)
+
+    ret$hi.z <- hi.z |>
+      array(dim = dm)
+
+  }
+    
+  return(ret)
+    
 }
+
+
+#' @importFrom mgcv exclude.too.far
+newd_gam_int <- \(
+  x, 
+  view = NULL, 
+  too.far = 0, 
+  cond = list(), 
+  n.grid = 501L, # default was `30L` in ?mgcv::vis.gam
+  lp = 1, 
+  ...
+) {
+  
+  # re-written from ?mgcv::vis.gam
+  
+  vs <- x$var.summary
+  
+  v.names <- names(vs)
+  
+  if (is.null(view)) {
+    k <- 0
+    view <- rep("", 2)
+    #for (i in 1:length(v.names)) {
+    for (i in seq_along(v.names)) {
+      
+      ok <- TRUE
+      
+      if (is.matrix(vs[[i]])) {
+        ok <- FALSE
+      } else if (is.factor(vs[[i]])) {
+        # tzh wants to deprecate
+        if (length(levels(vs[[i]])) <= 1) 
+          ok <- FALSE
+      } else {
+        if (length(unique(vs[[i]])) == 1) 
+          ok <- FALSE
+      }
+      
+      if (ok) {
+        k <- k + 1
+        view[k] <- v.names[i]
+      }
+      
+      if (k == 2) 
+        break
+    }
+    
+    if (k < 2) 
+      stop("Model does not seem to have enough terms to do anything useful")
+    
+  } else {
+    
+    if (sum(view %in% v.names) != 2) 
+      stop(gettextf("view variables must be one of %s", paste(v.names, collapse = ", ")))
+    
+    for (i in 1:2) {
+      if (!inherits(vs[[view[i]]], c("numeric", "factor"))) {
+        stop("Don't know what to do with parametric terms that are not simple numeric or factor variables")
+      }
+    }
+  }
+  
+  ok <- TRUE
+  
+  for (i in 1:2) {
+    if (is.factor(vs[[view[i]]])) {
+      # tzh wants to deprecate
+      if (length(levels(vs[[view[i]]])) <= 1) 
+        ok <- FALSE
+    } else {
+      if (length(unique(vs[[view[i]]])) <= 1) 
+        ok <- FALSE
+    }
+  }
+  
+  if (!ok) 
+    stop(gettextf("View variables must contain more than one value. view = c(%s,%s).", view[1], view[2]))
+  
+  if (is.factor(vs[[view[1]]])) {
+    return(invisible()) # tzh deprecated
+    #m1 <- fac.seq(vs[[view[1]]], n.grid)
+  } else {
+    r1 <- range(vs[[view[1]]])
+    m1 <- seq(r1[1], r1[2], length = n.grid)
+  }
+  
+  if (is.factor(vs[[view[2]]])) {
+    return(invisible()) # tzh deprecated
+    #m2 <- fac.seq(vs[[view[2]]], n.grid)
+  } else {
+    r2 <- range(vs[[view[2]]])
+    m2 <- seq(r2[1], r2[2], length = n.grid)
+  }
+  
+  v1 <- rep(m1, n.grid)
+  v2 <- rep(m2, rep(n.grid, n.grid))
+  newd <- data.frame(matrix(0, n.grid * n.grid, 0))
+  for (i in 1:length(vs)) {
+    ma <- cond[[v.names[i]]]
+    if (is.null(ma)) {
+      ma <- vs[[i]]
+      if (is.numeric(ma)) 
+        ma <- ma[2]
+    }
+    if (is.matrix(vs[[i]])) 
+      newd[[i]] <- matrix(ma, n.grid * n.grid, ncol(vs[[i]]), 
+                          byrow = TRUE)
+    else newd[[i]] <- rep(ma, n.grid * n.grid)
+  }
+  names(newd) <- v.names
+  newd[[view[1]]] <- v1
+  newd[[view[2]]] <- v2
+  
+  #if (is.factor(m1)) {
+  #  # tzh deprecated
+  #  m1 <- as.numeric(m1)
+  #  m1 <- seq(min(m1) - 0.5, max(m1) + 0.5, length = n.grid)
+  #}
+  #if (is.factor(m2)) {
+  #  # tzh deprecated
+  #  m2 <- as.numeric(m2)
+  #  m2 <- seq(min(m1) - 0.5, max(m2) + 0.5, length = n.grid)
+  #}
+  
+  # exclude-too-far
+  # was after ?mgcv::predict.gam inside ?mgcv::vis.gam
+  if (too.far > 0) {
+    ex.tf <- exclude.too.far(v1, v2, x$model[, view[1]], 
+                             x$model[, view[2]], dist = too.far)
+  } else ex.tf <- NULL
+  
+  return(list(
+    newd = newd,
+    ex.tf = ex.tf,
+    m1 = m1,
+    m2 = m2
+  ))
+  
+
+}
+
+
+
+# tzh does not agree (mathematically) with function `fac.seq()` inside ?mgcv::vis.gam
+
+
+
+
+
+
+
+

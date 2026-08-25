@@ -2,64 +2,55 @@
 % Please edit documentation in R/widget_gam.R
 \name{widget_gam}
 \alias{widget_gam}
-\title{Alternative of \link[mgcv]{vis.gam}}
+\title{Alternative \link[graphics]{persp}ective Plot for \link[mgcv]{gam} Model}
 \usage{
-widget_gam(
-  ...,
-  formula,
-  newdata = data,
-  proj_xy = TRUE,
-  proj_xz = TRUE,
-  n = 501L,
-  newid = seq_len(min(3L, nrow(newdata))),
-  ylim = range(X[is.finite(X)], newX[is.finite(newX)]),
-  colorscale
-)
+widget_gam(x, ..., colorscale)
 }
 \arguments{
-\item{...}{one or more \link[mgcv]{gam} models
-based on \emph{a same data set}.}
+\item{x}{a \link[mgcv]{gam} model}
 
-\item{formula}{one-sided \link[stats]{formula}}
+\item{...}{parameters of the function \link[mgcv]{vis.gam}}
 
-\item{newdata}{(for future expansion)}
-
-\item{proj_xy}{\link[base]{logical} scalar, whether to show
-the projection to the \eqn{(x,y)}-plain, default value is \code{TRUE}}
-
-\item{proj_xz}{\link[base]{logical} scalar, whether to show
-the projection to the \eqn{(x,z)}-plain, default value is \code{TRUE}}
-
-\item{n}{\link[base]{integer} scalar, fineness of visualization,
-default value is \code{501L}. See parameter \code{n.grid} of the function \link[mgcv]{vis.gam}.}
-
-\item{newid}{\link[base]{integer} scalar or \link[base]{vector},
-row indices of \code{newdata} to be visualized.
-Default \code{1:2}, i.e., the first two test subjects.
-Use \code{newid = NULL} to disable the visualization of \code{newdata}.}
-
-\item{ylim}{\link[base]{length}-2 \link[base]{double} \link[base]{vector},
-range on \eqn{q}-axis. Default is the range of \eqn{X} and \eqn{X^{\text{new}}} combined.}
-
-\item{colorscale}{see function \link[plotly]{add_surface}}
+\item{colorscale}{to be passed into the function \link[plotly]{add_surface}}
 }
 \value{
 The function \code{\link[=widget_gam]{widget_gam()}} returns a pretty \CRANpkg{htmlwidgets} created by \strong{R} package \CRANpkg{plotly}.
 }
 \description{
-An interactive \CRANpkg{htmlwidgets} of the
-\link[graphics]{persp}ective plot for
-\link[mgcv]{gam} model(s)
+An interactive \link[graphics]{persp}ective plot for
+\link[mgcv]{gam} model,
+rendered as an \CRANpkg{htmlwidgets}
 using the package \CRANpkg{plotly}.
 }
 \note{
-The maintainer is not aware of any functionality of projection of arbitrary curves in package \CRANpkg{plotly}.
-Currently, the projections are hard coded.
+The internal utility functions \code{persp_gam_int()} and \code{newd_gam_int()} are based on the function \link[mgcv]{vis.gam}.
 }
 \examples{
 library(mgcv)
-# ?s
-# ?ti
+colorscale = list(c(0, 1), c('white', 'lightgreen'))
 
+# examples from ?mgcv::te
+test1 = \(x,z,sx=0.3,sz=0.4) { 
+ x = x*20
+ (pi**sx*sz)*(1.2*exp(-(x-0.2)^2/sx^2-(z-0.3)^2/sz^2)+
+  0.8*exp(-(x-0.7)^2/sx^2-(z-0.8)^2/sz^2))
 }
-\keyword{internal}
+n = 500
+x = runif(n)/20; z = runif(n);
+xs = seq(0,1,length=30)/20; zs = seq(0,1,length=30)
+pr = data.frame(x=rep(xs,30),z=rep(zs,rep(30,30)))
+truth = matrix(test1(pr$x,pr$z),30,30)
+persp(xs,zs,truth); title("truth")
+f = test1(x,z)
+y = f + rnorm(n)*0.2
+b1 = gam(y ~ s(x,z))
+b2 = gam(y ~ te(x,z))
+b3 = gam(y ~ ti(x) + ti(z) + ti(x,z))
+b4 = gam(y ~ ti(x) + ti(x,z,mc=c(0,1))) ## note z constrained!
+\donttest{
+widget_gam(b1, colorscale = colorscale)
+widget_gam(b2, colorscale = colorscale)
+widget_gam(b3, colorscale = colorscale)
+widget_gam(b4, colorscale = colorscale)
+}
+}
